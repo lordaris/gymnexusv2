@@ -10,7 +10,7 @@ export default function LogoutButton() {
     Cookies.remove("token"); // Remove token from cookie
     Cookies.remove("role"); // Remove role from cookie
     Cookies.remove("user"); // Remove user from cookie
-    router.push("/"); // Redirect to home page
+    router.push("/").then(()=>{}); // Redirect to home page
   };
 
   const handleLogoutConfirmation = () => {
