@@ -15,7 +15,7 @@ The difference between the previous version and this one is that this is made en
 2. create a .env.local file in the root folder and add the following variables:
    * JWT_SECRET = "your secret"
    * MONGODB_URI = "your mongo uri"
-   * NEXT_PUBLIC_API_URL = http://localhost:3000/api
+   * NEXT_PUBLIC_API_URL = "your API URL"
 
 3. start by runnin `npm run dev` inside the root folder
 4. go to localhost:3000 to view the app
