@@ -1,7 +1,7 @@
-import { Workout } from "../../../models/Workout";
-import User from "../../../models/User";
-import dbConnect from "../../../utils/mongodb";
-import authMiddleware from "../../../middleware/authMiddleware";
+import  Workout  from "../../../../models/Workout";
+import User from "../../../../models/User";
+import dbConnect from "../../../../utils/mongodb";
+import authMiddleware from "../../../../middleware/authMiddleware";
 
 export default async function unassignWorkout(req, res) {
   const { params } = req.query;

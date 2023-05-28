@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Link from "next/link";
-import Layout from "../../../components/ui/userLayout";
+import Layout from "../../../../components/ui/userLayout";
 import Image from "next/image";
 
 export const getRoutines = async () => {

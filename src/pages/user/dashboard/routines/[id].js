@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
-import Layout from "../../../components/ui/userLayout";
+import Layout from "../../../../components/ui/userLayout";
 
 function UserDashboard() {
   const [workout, setWorkout] = useState(null);

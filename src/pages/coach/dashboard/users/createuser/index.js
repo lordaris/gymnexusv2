@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import Cookies from "js-cookie";
-import CoachLayout from "../../../../components/ui/coachLayout";
+import CoachLayout from "../../../../../components/ui/coachLayout";
 import { toast } from "react-toastify";
 
 // TODO Clean the code

@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
-import Layout from "../../../components/ui/coachLayout";
+import Layout from "../../../../components/ui/coachLayout";
 import Link from "next/link";
 import { BsTrashFill } from "react-icons/bs";
 import { FaEdit } from "react-icons/fa";

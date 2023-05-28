@@ -59,5 +59,4 @@ const WorkoutSchema = new Schema({
 });
 
 const Workout = mongoose.models.Workout || mongoose.model('Workout', WorkoutSchema);
-
-export { Workout };
+export default Workout;

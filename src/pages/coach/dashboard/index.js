@@ -1,5 +1,5 @@
-import LoginRedirect from "../../components/ui/loginRedirect";
-import CoachLayout from "../../components/ui/coachLayout";
+import LoginRedirect from "../../../components/ui/loginRedirect";
+import CoachLayout from "../../../components/ui/coachLayout";
 import Link from "next/link";
 export default function Dashboard() {
   LoginRedirect();

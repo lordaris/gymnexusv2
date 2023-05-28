@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import axios from "axios";
 import Cookies from "js-cookie";
-import Layout from "../../../components/ui/coachLayout";
+import Layout from "../../../../components/ui/coachLayout";
 
 export default function UsersPage() {
   const [users, setUsers] = useState([]);

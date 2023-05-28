@@ -1,5 +1,5 @@
-import User from "../../../models/User";
-import dbConnect from "../../../utils/mongodb";
+import User from "../../../../models/User";
+import dbConnect from "../../../../utils/mongodb";
 
 /*
 Find users by using their coach ID.

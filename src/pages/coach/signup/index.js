@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
-import LoginRedirect from "../../components/ui/loginRedirect";
+import LoginRedirect from "../../../components/ui/loginRedirect";
 import { toast } from "react-toastify";
 export default function SignupPage() {
   const router = useRouter();

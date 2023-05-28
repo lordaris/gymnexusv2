@@ -1,6 +1,6 @@
-import { Workout } from "../../../models/Workout";
-import dbConnect from "../../../utils/mongodb";
-import authMiddleware from "../../../middleware/authMiddleware";
+import  Workout  from "../../../../models/Workout";
+import dbConnect from "../../../../utils/mongodb";
+import authMiddleware from "../../../../middleware/authMiddleware";
 export default async function listAllWorkouts(req, res) {
   await dbConnect();
 

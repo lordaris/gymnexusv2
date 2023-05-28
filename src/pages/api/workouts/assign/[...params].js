@@ -1,6 +1,6 @@
-import { Workout } from "../../../models/Workout";
-import User from "../../../models/User";
-import dbConnect from "../../../utils/mongodb";
+import  Workout  from "../../../../models/Workout";
+import User from "../../../../models/User";
+import dbConnect from "../../../../utils/mongodb";
 export default async function assignWorkoutToUser(req, res) {
   const { params } = req.query;
   const [workoutId, userId] = params;

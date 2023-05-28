@@ -1,12 +1,12 @@
-import User from "../../models/User";
+import User from "../../../models/User";
 import jwt from "jsonwebtoken";
-import dbConnect from "../../utils/mongodb";
+import dbConnect from "../../../utils/mongodb";
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "1d" });
 };
 
-/* 
+/*
 Login controller
 */
 

@@ -1,11 +1,10 @@
-import { Workout } from "../../../models/Workout";
-import dbConnect from "../../../utils/mongodb";
-import authMiddleware from "../../../middleware/authMiddleware";
+import  Workout  from "../../../../models/Workout";
+import dbConnect from "../../../../utils/mongodb";
+import authMiddleware from "../../../../middleware/authMiddleware";
 /*
  * Update a workout or an exercise depending on the number of params
  */
 
-// TODO: Add the authMiddleware
 export default async function update(req, res) {
   const { params } = req.query;
   await authMiddleware(req, res, async () => {

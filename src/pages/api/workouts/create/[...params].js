@@ -1,6 +1,6 @@
-import { Workout } from "../../../models/Workout";
-import authMiddleware from "../../../middleware/authMiddleware";
-import dbConnect from "../../../utils/mongodb";
+import  Workout  from "../../../../models/Workout";
+import authMiddleware from "../../../../middleware/authMiddleware";
+import dbConnect from "../../../../utils/mongodb";
 
 
 

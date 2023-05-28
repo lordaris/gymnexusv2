@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import LoginRedirect from "@/pages/components/ui/loginRedirect";
+import LoginRedirect from "@/components/ui/loginRedirect";
 
 export default function Home() {
   LoginRedirect();

@@ -1,4 +1,4 @@
-import Layout from "../../components/ui/userLayout";
+import Layout from "../../../components/ui/userLayout";
 import Image from "next/image";
 import Link from "next/link";
 

@@ -1,7 +1,7 @@
-import { Workout } from "../../../../models/Workout";
-import dbConnect from "../../../../utils/mongodb";
+import  Workout  from "../../../../../models/Workout";
+import dbConnect from "../../../../../utils/mongodb";
 import mongoose from "mongoose";
-import authMiddleware from "../../../../middleware/authMiddleware";
+import authMiddleware from "../../../../../middleware/authMiddleware";
 export default async function listAssignedWorkouts(req, res) {
   await authMiddleware(req, res, async () => {
     const { userId } = req.query;

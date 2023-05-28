@@ -1,7 +1,7 @@
-import { Workout } from "../../../../models/Workout";
-import dbConnect from "../../../../utils/mongodb";
+import  Workout  from "../../../../../models/Workout";
+import dbConnect from "../../../../../utils/mongodb";
 import mongoose from "mongoose";
-import authMiddleware from "../../../../middleware/authMiddleware";
+import authMiddleware from "../../../../../middleware/authMiddleware";
 export default function listWorkoutsByCoach(req, res) {
   return new Promise((resolve, reject) => {
     authMiddleware(req, res, async () => {

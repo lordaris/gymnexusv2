@@ -1,4 +1,4 @@
-import CoachLayout from "../../../components/ui/coachLayout";
+import CoachLayout from "../../../../components/ui/coachLayout";
 import Image from "next/image";
 export default function Profile() {
   return (

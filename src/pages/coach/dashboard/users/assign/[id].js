@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
-import CoachLayout from "../../../../components/ui/coachLayout";
+import CoachLayout from "../../../../../components/ui/coachLayout";
 
 export default function AssignWorkout() {
   const [coachWorkouts, setCoachWorkouts] = useState([]);

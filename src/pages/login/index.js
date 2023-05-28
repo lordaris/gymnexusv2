@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
-import LoginRedirect from "../components/ui/loginRedirect";
+import LoginRedirect from "../../components/ui/loginRedirect";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");

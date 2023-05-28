@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import Layout from "../../../../../components/ui/coachLayout";
+import Layout from "../../../../../../components/ui/coachLayout";
 import Cookie from "js-cookie";
 import { BsTrashFill } from "react-icons/bs";
 import { toast } from "react-toastify";

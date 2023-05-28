@@ -2,8 +2,8 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import LogoutButton from "../../../components/ui/logoutButton";
-import Layout from "../../../components/ui/coachLayout";
+import LogoutButton from "../../../../components/ui/logoutButton";
+import Layout from "../../../../components/ui/coachLayout";
 
 export default function RoutinesPage() {
   const [routines, setRoutines] = useState([]);
