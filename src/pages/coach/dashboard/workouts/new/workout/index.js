@@ -171,7 +171,7 @@ export default function AddWorkout() {
                   onChange={(e) => handleDayChange(e, dayIndex)}
                 />
               </div>
-              <div>
+              <div className="pb-4">
                 <label htmlFor={`day-${dayIndex}-focus`}></label>
                 <input
                   type="text"

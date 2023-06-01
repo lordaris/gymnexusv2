@@ -93,13 +93,9 @@ export default function LoginPage() {
                   onChange={(event) => setPassword(event.target.value)}
                 />
               </div>
-            </div>
-
-            {errorMessage && (
+              {errorMessage && (
               <div className="mt-2 text-sm text-red-600">{errorMessage}</div>
             )}
-
-            <div className="flex justify-center">
               <button
                 type="submit"
                 className="btn btn-primary w-full m-4"
@@ -108,6 +104,10 @@ export default function LoginPage() {
                 {isLoading ? "Loading..." : "Login"}
               </button>
             </div>
+
+            
+
+            
           </form>
         </div>
       </div>

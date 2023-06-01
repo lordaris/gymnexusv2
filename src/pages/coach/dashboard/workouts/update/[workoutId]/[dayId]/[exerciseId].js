@@ -22,9 +22,12 @@ function ExerciseEditPage() {
   useEffect(() => {
     if (workoutId) {
       axios
-        .get(process.env.NEXT_PUBLIC_API_URL + `/workouts/list/by-id/${workoutId}`, {
-          headers: { Authorization: `${token}` },
-        })
+        .get(
+          process.env.NEXT_PUBLIC_API_URL + `/workouts/list/by-id/${workoutId}`,
+          {
+            headers: { Authorization: `${token}` },
+          }
+        )
         .then((response) => {
           const day = response.data.days.find((d) => d._id === dayId);
           const exercise = day.exercises.find((e) => e._id === exerciseId);
@@ -81,10 +84,12 @@ function ExerciseEditPage() {
   return (
     <Layout>
       <h1 className={"font-thin font-lato text-4xl m-4"}>Edit Exercise</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="px-4">
         <div>
-          <label htmlFor="name">Exercise</label>
-          <input
+          <label htmlFor="name" className="font-lato font-bold">
+            Exercise
+          </label>
+          <textarea
             type="text"
             name="name"
             className={"input input-ghost w-full max-w-xs m-4"}
@@ -93,7 +98,9 @@ function ExerciseEditPage() {
           />
         </div>
         <div>
-          <label htmlFor="sets">Sets</label>
+          <label htmlFor="sets" className="font-lato font-bold">
+            Sets
+          </label>
           <input
             type="text"
             name="sets"
@@ -103,7 +110,9 @@ function ExerciseEditPage() {
           />
         </div>
         <div>
-          <label htmlFor="reps">Reps</label>
+          <label htmlFor="reps" className="font-lato font-bold">
+            Reps
+          </label>
           <input
             type="text"
             name="reps"
@@ -113,7 +122,9 @@ function ExerciseEditPage() {
           />
         </div>
         <div>
-          <label htmlFor="cadence">Cadence</label>
+          <label htmlFor="cadence" className="font-lato font-bold">
+            Cadence
+          </label>
           <input
             type="text"
             name="cadence"
@@ -123,7 +134,9 @@ function ExerciseEditPage() {
           />
         </div>
         <div>
-          <label htmlFor="notes">Notes</label>
+          <label htmlFor="notes" className="font-lato font-bold">
+            Notes
+          </label>
           <input
             type="text"
             name="notes"
@@ -133,7 +146,9 @@ function ExerciseEditPage() {
           />
         </div>
         <div>
-          <label htmlFor="video">Video</label>
+          <label htmlFor="video" className="font-lato font-bold">
+            Video
+          </label>
           <input
             type="text"
             name="video"
@@ -142,12 +157,7 @@ function ExerciseEditPage() {
             onChange={handleChange}
           />
         </div>
-        <button
-          type="submit"
-          className={
-            "btn btn-success hover:btn-success-accent hover:text-success-accent"
-          }
-        >
+        <button type="submit" className="btn btn-success">
           Update Exercise
         </button>
       </form>

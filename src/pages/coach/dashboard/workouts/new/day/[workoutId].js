@@ -61,7 +61,7 @@ export default function NewDayForm() {
             onChange={handleChange}
           />
         </div>
-        <div>
+        <div className="py-4">
           <input
             type="text"
             name="focus"
@@ -71,7 +71,7 @@ export default function NewDayForm() {
             onChange={handleChange}
           />
         </div>
-        <button type="submit" className={"btn bg-success m-4"}>
+        <button type="submit" className={"btn btn-success"}>
           Add Day
         </button>
       </form>

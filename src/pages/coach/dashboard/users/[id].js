@@ -103,7 +103,7 @@ export default function UserWorkouts() {
         </h1>
         {" "}
         <ul className="mt-4">
-          <li className="font-semibold mb-2 font-lato">Assigned workouts:</li>
+          <li className="font-semibold text-2xl mb-2 font-lato">Assigned workouts:</li>
           {workouts.map((workout) => (
             <li key={workout._id} className={"m-4 hover:text-accent"}>
               <Link

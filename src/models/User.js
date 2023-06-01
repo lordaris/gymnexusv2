@@ -5,6 +5,7 @@ import validator from 'validator';
 const { Schema } = mongoose;
 
 const metricsSchema = new Schema({
+  date: Date,
   weight: Number, 
   height: Number,
   neck: Number,
@@ -12,6 +13,8 @@ const metricsSchema = new Schema({
   waist: Number, 
   hips: Number,
   tights: Number, 
+  imc: Number,
+  bodyFatPercentage: Number,
   biceps: Number, 
   benchPressRm: Number, 
   sitUpRm: Number, 
@@ -41,6 +44,7 @@ const userSchema = new Schema({
   name: String, 
   lastName: String,
   age: Number, 
+  biologicalGender: String,
   metrics: [metricsSchema],
   medical: medicalSchema,
   role: {

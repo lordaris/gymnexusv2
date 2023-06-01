@@ -1,14 +1,3 @@
-/*
-This will contain the controllers that need params in order to work. 
-  Update User (PUT method)
-  Delete User (DELETE method)
-Login, list and signup will be at the main level of the users endpoint as follows
-  api/users/login
-  api/users
-  api/users/signup 
-respectively  
-*/
-
 // imports
 import User from "../../../../models/User";
 import jwt from "jsonwebtoken";
@@ -28,7 +17,6 @@ export default async function userCrud(req, res) {
   await dbConnect();
   await authMiddleware(req, res, async () => {
 
-  /* This is a template to be used with my updateUser and deleteUser controllers */
   switch (method) {
     case "PUT":
       await updateUser(req, res, id);
@@ -47,9 +35,8 @@ export default async function userCrud(req, res) {
 }
 
 // Update controller
-/* userId will be provided as a param on the main function*/
 async function updateUser(req, res, id) {
-  const { email, password, name, lastName, age, role } = req.body;
+  const { email, name, lastName, age, role, biologicalGender } = req.body;
   await dbConnect();
   try {
     const user = await User.findById(id);
@@ -57,7 +44,14 @@ async function updateUser(req, res, id) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    user.set({ email, password, name, lastName, age, role });
+    // Only update the fields that are present in the request body
+    if (email) user.email = email;
+    if (name) user.name = name;
+    if (lastName) user.lastName = lastName;
+    if (age) user.age = age;
+    if (role) user.role = role;
+    if (biologicalGender) user.biologicalGender = biologicalGender;
+
     await user.save();
     res.status(200).json(user);
   } catch (err) {

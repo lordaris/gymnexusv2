@@ -48,25 +48,25 @@ export default function AssignWorkout() {
 
   return (
     <CoachLayout>
-      <div>
-        <h2 className={"text-4xl font-thin font-lato"}>Assign workout</h2>
-        <ul>
-          {coachWorkouts.map((workout) => (
-            <li key={workout.id}>
-              <Link href={`/coach/dashboard/workouts/${workout._id}`}>
-                {workout.name}
-                {"    "}
-              </Link>
-              <button
-                className={"text-primary font-extrabold"}
-                onClick={() => handleAssign(workout._id)}
-              >
-                Add
-              </button>
-            </li>
-          ))}
-        </ul>{" "}
-      </div>
-    </CoachLayout>
+  <div>
+    <h2 className="text-4xl font-thin font-lato">Assign Workout</h2>
+    <ul>
+      {coachWorkouts.map((workout) => (
+        <li key={workout.id}>
+          <Link href={`/coach/dashboard/workouts/${workout._id}`} className=" hover:text-neutral-content">
+            {workout.name}
+          </Link>{" "}
+          <button
+            className="text-primary hover:text-primary-focus font-extrabold"
+            onClick={() => handleAssign(workout._id)}
+          >
+            Add
+          </button>
+        </li>
+      ))}
+    </ul>
+  </div>
+</CoachLayout>
+
   );
 }

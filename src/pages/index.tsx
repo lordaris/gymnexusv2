@@ -8,7 +8,7 @@ export default function Home() {
     <div className="hero min-h-screen">
       <div
         className={
-          "hero-content text-left p-10 text-primary-content place-content-center"
+          "hero-content text-left p-10 place-content-center"
         }
       >
         <div className={"max-w-md"}>

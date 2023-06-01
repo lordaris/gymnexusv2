@@ -21,7 +21,7 @@ The difference between the previous version and this one is that this is made en
 4. go to localhost:3000 to view the app
 
 ## Features and usage
-* Passwords are hashed using bcrypt
+* Passwords are hashed using bcrypt-js
 * Login and logout
 * JWT authentication
 * Create a coach account (this can be made in the main page by hitting the "I am new" button)
@@ -37,6 +37,8 @@ The difference between the previous version and this one is that this is made en
 
 ## TODO List
 - [ ] Replace alerts with modals
+- [ ] Possibly, add a cron to cut the use of the app to users who haven't made the payment.
+- [ ] Add a function to avoid screenshots
 - [ ] Add "general notes" entry for workouts
 - [ ] Replace Notes field with a textarea field
 - [ ] Replace success alerts with toasts 
