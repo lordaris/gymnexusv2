@@ -75,7 +75,7 @@ export default function AddMetricsPage() {
         If you add <span className="text-primary">weight, height, neck, waist, and hips,</span> the app will
         calculate your <span className="text-primary-focus">BMI and body fat percentage </span>and add that information to
         the corresponding line chart. You need to
-          update your "biological sex" on your profile to make the body fat
+          update your biological sex on your profile to make the body fat
           percentage calculations work
       </p>
 </div>

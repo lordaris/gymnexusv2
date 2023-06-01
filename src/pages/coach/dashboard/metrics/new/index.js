@@ -78,7 +78,7 @@ export default function AddMetricsPage() {
             BMI and body fat percentage{" "}
           </span>
           and add that information to the corresponding line chart. You need to
-          update your "biological sex" on your profile to make the body fat
+          update your biological sex on your profile to make the body fat
           percentage calculations work
         </p>
       </div>
