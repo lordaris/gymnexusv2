@@ -49,6 +49,7 @@ const WorkoutSchema = new Schema({
     },
   ],
   name: String,
+  additionalNotes: String,
   days: [DaySchema],
   status: {
     type: String,

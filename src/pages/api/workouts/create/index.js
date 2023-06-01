@@ -10,6 +10,7 @@ export default async function createWorkout(req, res) {
         coach: req.body.coach,
         assignedTo: req.body.assignedTo,
         name: req.body.name,
+        additionalNotes: req.body.additionalNotes,
         days: req.body.days,
       });
       await workout.save();

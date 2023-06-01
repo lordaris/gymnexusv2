@@ -36,64 +36,62 @@ function UserDashboard() {
 
   return (
     <Layout>
-      <div className="container mx-auto">
-        <h1 className="text-5xl font-thin font-lato">{workout.name}</h1>
-        <ul className="list-reset">
-          {workout.days.map((day) => (
-            <li key={day._id} className="my-8">
-              <div className="border rounded-lg p-4 shadow max-w-md mx-auto">
-                <h2
-                  className="text-3xl font-extrabold font-lato cursor-pointer"
-                  onClick={() => toggleDetails(day)}
-                >
-                  {day.day} ({day.focus})
-                </h2>
-                {selectedDay === day && (
-                  <ul className="list-reset">
-                    {day.exercises.map((exercise) => (
-                      <li key={exercise._id} className="my-4">
-                        <h3 className="text-3xl font-bold font-bebas-neue">
-                          {exercise.video ? (
-                            <a
-                              href={exercise.video}
-                              className="text-blue-500 hover:text-blue-700"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {exercise.name}
-                            </a>
-                          ) : (
-                            <span>{exercise.name}</span>
-                          )}
-                        </h3>
-                        <p className="text-xl">
-                          <span className="font-semibold">Sets:</span>{" "}
-                          {exercise.sets}
-                        </p>
-                        <p className="text-xl">
-                          <span className="font-semibold">Reps:</span>{" "}
-                          {exercise.reps}
-                        </p>
-                        <p className="text-xl">
-                          <span className="font-semibold">Cadence:</span>{" "}
-                          {exercise.cadence}
-                        </p>
-                        {exercise.notes && exercise.notes.trim().length > 0 && (
-                          <p className="text-xl">
-                            <span className="font-semibold">Notes:</span>{" "}
-                            {exercise.notes}
-                          </p>
+    <div className="container mx-auto">
+      <h1 className="text-5xl font-thin font-lato mb-8">{workout.name}</h1>
+      <span>Additional notes: {workout.additionalNotes}</span>
+      <ul className="list-reset">
+        {workout.days.map((day) => (
+          <li key={day._id} className="my-8 px-4">
+            <div className="border rounded-lg p-4 shadow max-w-md mx-auto">
+              <h2
+                className="hover:text-primary text-3xl font-extrabold font-lato cursor-pointer mb-4 border-b pb-2"
+                onClick={() => toggleDetails(day)}
+              >
+                {day.day} ({day.focus})
+              </h2>
+              {selectedDay === day && (
+                <ul className="list-reset">
+                  {day.exercises.map((exercise) => (
+                    <li key={exercise._id} className="my-4">
+                      <h3 className="text-2xl font-bold font-bebas-neue mb-2">
+                        {exercise.video ? (
+                          <a
+                            href={exercise.video}
+                            className="text-blue-500 hover:text-blue-700"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {exercise.name}
+                          </a>
+                        ) : (
+                          <span>{exercise.name}</span>
                         )}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </Layout>
+                      </h3>
+                      <p className="text-lg">
+                        <span className="font-semibold">Sets:</span> {exercise.sets}
+                      </p>
+                      <p className="text-lg">
+                        <span className="font-semibold">Reps:</span> {exercise.reps}
+                      </p>
+                      <p className="text-lg">
+                        <span className="font-semibold">Cadence:</span> {exercise.cadence}
+                      </p>
+                      {exercise.notes && exercise.notes.trim().length > 0 && (
+                        <p className="text-lg">
+                          <span className="font-semibold">Notes:</span> {exercise.notes}
+                        </p>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </Layout>
+  
   );
 }
 

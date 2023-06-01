@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 import { BsTrashFill } from "react-icons/bs";
+import { toast } from "react-toastify";
 
 export default function UserWorkouts() {
   const [workouts, setWorkouts] = useState([]);
@@ -39,6 +40,28 @@ export default function UserWorkouts() {
         .catch((error) => console.error(error));
     }
   };
+  const handleDeleteUser = (userId, token, router) => {
+    if (window.confirm("Are you sure you want to delete this user?")) {
+      axios
+        .delete(process.env.NEXT_PUBLIC_API_URL + `/users/profile/${userId}`, {
+          headers: { Authorization: `${token}` },
+        })
+        .then((response) => {
+          toast.success("User deleted successfully", {
+            position: "bottom-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          router.push("/coach/dashboard/users");
+        })
+        .catch((error) => console.error(error));
+    }
+  };
 
   useEffect(() => {
     axios
@@ -67,18 +90,30 @@ export default function UserWorkouts() {
 
   return (
     <CoachLayout>
-      <div>
-        <h1 className={"text-4xl font-thin font-lato"}>User</h1>
-        <p>{user.email}</p>
-        <ul>
-          Assigned workouts:
+      <div className="p-4">
+        <h1 className={"text-4xl font-thin font-lato"}>User: 
+          {" "}
+          {user.name ? user.name : user.email}{" "}
+          <button
+            className={"text-error hover:text-error-content ml-2"}
+            onClick={() => handleDeleteUser(userId, token, router)}
+          >
+            <BsTrashFill />
+          </button>
+        </h1>
+        {" "}
+        <ul className="mt-4">
+          <li className="font-semibold mb-2 font-lato">Assigned workouts:</li>
           {workouts.map((workout) => (
             <li key={workout._id} className={"m-4 hover:text-accent"}>
-              <Link href={`/coach/dashboard/workouts/${workout._id}`}>
+              <Link
+                href={`/coach/dashboard/workouts/${workout._id}`}
+                className="text-base"
+              >
                 {workout.name}
               </Link>
               <button
-                className={"text-error"}
+                className={"text-error hover:text-error-content ml-2"}
                 onClick={() => handleUnassign(workout._id)}
               >
                 <BsTrashFill />
@@ -87,7 +122,7 @@ export default function UserWorkouts() {
           ))}
         </ul>
         <Link href={`/coach/dashboard/users/assign/${user._id}`}>
-          <button className={"btn btn-primary"}>Assign workout</button>
+          <button className={"btn btn-primary mt-4"}>Assign workout</button>
         </Link>
       </div>
     </CoachLayout>

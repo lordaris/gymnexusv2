@@ -4,6 +4,29 @@ import validator from 'validator';
 
 const { Schema } = mongoose;
 
+const metricsSchema = new Schema({
+  weight: Number, 
+  height: Number,
+  neck: Number,
+  chest: Number,
+  waist: Number, 
+  hips: Number,
+  tights: Number, 
+  biceps: Number, 
+  benchPressRm: Number, 
+  sitUpRm: Number, 
+  deadLiftRm: Number,
+});
+
+const medicalSchema = new Schema({
+  illnesses: [String],
+  injuries: [String],
+  allergies: [String],
+  medications: [String],
+  surgeries: [String],
+  familyHistory: [String],
+});
+
 const userSchema = new Schema({
   email: {
     type: String,
@@ -15,6 +38,11 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  name: String, 
+  lastName: String,
+  age: Number, 
+  metrics: [metricsSchema],
+  medical: medicalSchema,
   role: {
     type: String,
     required: true,

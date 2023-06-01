@@ -134,52 +134,48 @@ function Workouts() {
 
   return (
     <Layout>
-      <div className="">
-        <h1 className="text-4xl font-thin font-lato">
-          {workout.name}
-          <button
-            className="text-error"
-            onClick={() => handleDeleteWorkout(id, token, router)}
-          >
-            <BsTrashFill />
-          </button>
-        </h1>
-
-        <ul>
-          {workout.days.map((day) => (
-            <li key={day._id} className="">
-              <h2
-                className="text-4xl font-thin font-lato cursor-pointer"
-                onClick={() => toggleDetails(day)}
+    <div className="text-center mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+      <h1 className="text-4xl font-lato">
+        {workout.name}
+        <button
+          className="text-error hover:text-error-content"
+          onClick={() => handleDeleteWorkout(id, token, router)}
+        >
+          <BsTrashFill />
+        </button>
+      </h1>
+      <span className="text-xl font-lato">Notes:   {workout.additionalNotes}
+</span>
+      <ul className="space-y-6">
+        {workout.days.map((day) => (
+          <li key={day._id} className="bg-white rounded-lg shadow-md">
+            <h2
+              className="text-4xl font-lato cursor-pointer py-4 px-6 flex justify-between items-center hover:text-primary-focus"
+              onClick={() => toggleDetails(day)}
+            >
+              <span className="ml-4">
+                {day.day} ({day.focus})
+              </span>
+              <button
+                onClick={() =>
+                  handleDeleteDay(id, day._id, setWorkout, token)
+                }
+                className="text-error px-4 py-2 hover:text-error-content"
               >
-                <div className="flex justify-center py-4 items-center">
-                  {day.day} ({day.focus}){" "}
-                  <button
-                    onClick={() =>
-                      handleDeleteDay(id, day._id, setWorkout, token)
-                    }
-                    className=" text-error px-4 py-2"
+                <BsTrashFill />
+              </button>
+            </h2>
+            <div className="divider"></div>
+  
+            {selectedDay === day && (
+              <ul className="space-y-4">
+                {day.exercises.map((exercise) => (
+                  <li
+                    key={exercise._id}
+                    className="text-xl font-lato px-6 py-4 flex flex-col"
                   >
-                    <BsTrashFill />{" "}
-                  </button>
-                </div>
-                <div>
-                  <Link
-                    href={`/coach/dashboard/workouts/new/exercise/${id}/${day._id}`}
-                    className="btn text-success px-4 py-2"
-                  >
-                    New Exercise{" "}
-                  </Link>
-                </div>
-              </h2>
-              <div className="divider"></div>
-
-              {selectedDay === day && (
-                <ul className="">
-                  {day.exercises.map((exercise) => (
-                    <li key={exercise._id} className="text-xl font-lato">
-                      {" "}
-                      <h3 className="text-3xl font-bebas-neue">
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="text-3xl font-bebas-neue text-left">
                         {exercise.video ? (
                           <a
                             href={exercise.video}
@@ -193,10 +189,10 @@ function Workouts() {
                           <span>{exercise.name}</span>
                         )}
                       </h3>
-                      <div className={"flex justify-center items-center"}>
+                      <div className="flex justify-end">
                         <Link
                           href={`/coach/dashboard/workouts/update/${id}/${day._id}/${exercise._id}`}
-                          className="text-success px-4 py-2 mr-4"
+                          className="text-success px-4 py-2 hover:text-success-content"
                         >
                           <FaEdit />
                         </Link>
@@ -210,11 +206,13 @@ function Workouts() {
                               token
                             )
                           }
-                          className="text-error px-4 py-2"
+                          className="text-error px-4 py-2 hover:text-error-content"
                         >
                           <BsTrashFill />
                         </button>
                       </div>
+                    </div>
+                    <div className="flex flex-col">
                       <p className="text-lg font-lato">
                         <span className="font-semibold">Sets:</span>{" "}
                         {exercise.sets}
@@ -233,23 +231,28 @@ function Workouts() {
                           {exercise.notes}
                         </p>
                       )}
-                      <div className="divider"></div>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </li>
-          ))}
-        </ul>
-
+                      <div className="divider mt-4"></div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+      <div className="py-4">
         <Link
           href={`/coach/dashboard/workouts/new/day/${workout._id}`}
-          className="btn bg-success text-white rounded-md px-4 py-2 mt-8"
+          className="btn bg-success text-white rounded-md px-4 py-4 mt-8"
         >
           Add day
         </Link>
       </div>
-    </Layout>
+    </div>
+  </Layout>
+  
+  
+
   );
 }
 

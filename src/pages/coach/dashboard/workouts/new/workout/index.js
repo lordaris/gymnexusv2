@@ -5,6 +5,7 @@ import Layout from "../../../../../../components/ui/coachLayout";
 import Cookie from "js-cookie";
 import { BsTrashFill } from "react-icons/bs";
 import { toast } from "react-toastify";
+
 export default function AddWorkout() {
   const [users, setUsers] = useState([]);
   const coachId = Cookie.get("user");
@@ -13,6 +14,7 @@ export default function AddWorkout() {
     assignedTo: "",
     coach: coachId,
     name: "",
+    additionalNotes: "",
     days: [
       {
         day: "",
@@ -101,14 +103,14 @@ export default function AddWorkout() {
   return (
     <Layout>
       <div className="flex justify-center">
-        <h1 className="text-4xl m-4 font-thin font-lato">Add workout</h1>
+        <h1 className="text-5xl m-4 font-thin font-lato">Add workout</h1>
       </div>{" "}
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="assignedTo">Assign to:</label>
+          <label htmlFor="assignedTo" className="text-xl font-semibold font-lato">Assign to:</label>
           <select
             name="assignedTo"
-            className="select select-ghost w-full max-w-xs m-4"
+            className="select select-ghost w-full max-w-xs m-4 font-lato"
             value={formValues.assignedTo}
             onChange={handleChange}
           >
@@ -125,20 +127,31 @@ export default function AddWorkout() {
           <input
             type="text"
             name="name"
-            className="input input-ghost w-full max-w-xs"
+            className="input input-ghost input-bordered input-primary w-full max-w-xs"
             placeholder={"Workout Name"}
             required={true}
             value={formValues.name}
             onChange={handleChange}
           />
         </div>
+        <div>
+  <label htmlFor="additionalNotes"></label>
+  <textarea
+    name="additionalNotes"
+    className="textarea textarea-ghost w-full max-w-xs"
+    placeholder={"Additional Notes"}
+    value={formValues.additionalNotes}
+    onChange={handleChange}
+  />
+</div>
+
         {formValues.days.map((day, dayIndex) => (
           <div key={dayIndex} className="flex flex-wrap justify-center">
-            <div className={"card bg-base-300 w-60 m-4"}>
-              <h2>
+            <div className={"card bg-base-300 w-60 m-4 px-4"}>
+              <h2 className="text-xl font-semibold font-lato">
                 Day {dayIndex + 1}{" "}
                 <button
-                  className={`m-4 text-error`}
+                  className={`m-4 text-error hover:text-error-content`}
                   type="button"
                   onClick={() => handleRemoveDay(dayIndex)}
                 >
@@ -146,12 +159,12 @@ export default function AddWorkout() {
                 </button>
               </h2>
 
-              <div>
+              <div >
                 <label htmlFor={`day-${dayIndex}-day`}></label>
                 <input
                   type="text"
                   name="day"
-                  className="input input-ghost w-full max-w-xs"
+                  className="input input-ghost w-full max-w-xs "
                   placeholder={"Day"}
                   required={true}
                   value={day.day}
@@ -172,11 +185,11 @@ export default function AddWorkout() {
               </div>
             </div>
             {day.exercises.map((exercise, exerciseIndex) => (
-              <div key={exerciseIndex} className={"card bg-base-200 w-60 m-4"}>
-                <h3>
+              <div key={exerciseIndex} className={"card bg-base-200 w-60 m-4 px-4"}>
+                <h3 className="text-xl font-semibold font-lato">
                   Exercise {exerciseIndex + 1}{" "}
                   <button
-                    className={`m-4 text-error`}
+                    className={`m-4 text-error hover:text-error-content`}
                     type="button"
                     onClick={() =>
                       handleRemoveExercise(dayIndex, exerciseIndex)
@@ -190,7 +203,7 @@ export default function AddWorkout() {
                   <label
                     htmlFor={`day-${dayIndex}-exercise-${exerciseIndex}-name`}
                   ></label>
-                  <input
+                  <textarea
                     type="text"
                     name="name"
                     className="input input-ghost w-full max-w-xs"
@@ -202,7 +215,9 @@ export default function AddWorkout() {
                     }
                   />
                 </div>
-                <div>
+                <div className="grid grid-cols-2 gap-4">
+
+                <div className="">
                   <label
                     htmlFor={`day-${dayIndex}-exercise-${exerciseIndex}-sets`}
                   ></label>
@@ -218,7 +233,7 @@ export default function AddWorkout() {
                     }
                   />
                 </div>
-                <div>
+                <div className="">
                   <label
                     htmlFor={`day-${dayIndex}-exercise-${exerciseIndex}-reps`}
                   ></label>
@@ -234,6 +249,9 @@ export default function AddWorkout() {
                     }
                   />
                 </div>
+
+                </div>
+                
                 <div>
                   <label
                     htmlFor={`day-${dayIndex}-exercise-${exerciseIndex}-cadence`}
@@ -253,10 +271,10 @@ export default function AddWorkout() {
                   <label
                     htmlFor={`day-${dayIndex}-exercise-${exerciseIndex}-notes`}
                   ></label>
-                  <input
+                  <textarea
                     type="text"
                     name="notes"
-                    className="textarea textarea-ghost"
+                    className="textarea textarea-ghost w-full max-w-xs"
                     placeholder={"Notes"}
                     value={exercise.notes}
                     onChange={(e) =>
@@ -264,14 +282,14 @@ export default function AddWorkout() {
                     }
                   />
                 </div>
-                <div>
+                <div className="py-4">
                   <label
                     htmlFor={`day-${dayIndex}-exercise-${exerciseIndex}-video`}
                   ></label>
                   <input
                     type="text"
                     name="video"
-                    className="input input-ghost w-full max-w-xs"
+                    className="input input-ghost w-full max-w-xs "
                     placeholder={"Video"}
                     value={exercise.video}
                     onChange={(e) =>

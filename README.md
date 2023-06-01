@@ -37,12 +37,14 @@ The difference between the previous version and this one is that this is made en
 
 ## TODO List
 - [ ] Replace alerts with modals
+- [ ] Add "general notes" entry for workouts
+- [ ] Replace Notes field with a textarea field
 - [ ] Replace success alerts with toasts 
 - [ ] Add a paid sign up feature
 - [ ] Add a confirmation email feature
 - [ ] Add a "Forgot username" feature
 - [ ] Add a "Forgot password" feature
-- [ ] Add metrics for the users to track their progress
+- [ ] Add metrics for the users to track their progress (weight, measurements and so on)
 - [ ] Improve the UI
 - [X] Make the app responsive
 - [ ] Improve the UX

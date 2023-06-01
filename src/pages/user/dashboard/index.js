@@ -13,8 +13,8 @@ export default function UserDashboard() {
               "btn bg-primary hover:bg-primary-focus text-primary-content"
             }
           >
-            Ir a mis rutinas
-          </button>
+            See my routines          
+            </button>
         </Link>
       </div>
     </Layout>
