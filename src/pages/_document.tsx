@@ -2,7 +2,7 @@ import { Html, Main, Head, NextScript } from "next/document";
 
 export default function Document() {
   return (
-    <Html lang="en" data-theme={"dracula"}>
+    <Html lang="en" data-theme={"bumblebee"}>
       <Head>
         <title>gymNEXUS</title>
         <link
