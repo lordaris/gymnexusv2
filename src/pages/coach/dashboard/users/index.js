@@ -40,7 +40,7 @@ export default function UsersPage() {
               <li key={user._id} className="my-4 px-4">
                 <div className="border rounded-lg p-4 shadow max-w-md mx-auto">
                   <Link href={`/coach/dashboard/users/${user._id}`}>
-                    {user.email}
+                  {user.name ? user.name : user.email}
                   </Link>
                 </div>
               </li>
