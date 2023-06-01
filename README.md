@@ -37,6 +37,7 @@ The difference between the previous version and this one is that this is made en
 
 ## TODO List
 - [ ] Replace alerts with modals
+- [ ] Check and clean style consistency
 - [ ] Possibly, add a cron to cut the use of the app to users who haven't made the payment.
 - [ ] Add a function to avoid screenshots
 - [ ] Add "general notes" entry for workouts

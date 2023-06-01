@@ -36,24 +36,33 @@ function UserDashboard() {
 
   return (
     <Layout>
-    <div className="container mx-auto">
-      <h1 className="text-5xl font-thin font-lato mb-8">{workout.name}</h1>
-      <span>Additional notes: {workout.additionalNotes}</span>
-      <ul className="list-reset">
+      <div className="text-center mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+    <h1 className="text-4xl font-lato py-4">
+        {workout.name}
+        </h1>
+        <span className="text-xl font-lato py-4">
+Additional notes: {workout.additionalNotes}</span>
+      <ul className="space-y-6 py-4">
         {workout.days.map((day) => (
-          <li key={day._id} className="my-8 px-4">
-            <div className="border rounded-lg p-4 shadow max-w-md mx-auto">
+          <li key={day._id} className="bg-base-200 rounded-lg shadow-md">
               <h2
-                className="hover:text-primary text-3xl font-extrabold font-lato cursor-pointer mb-4 border-b pb-2"
-                onClick={() => toggleDetails(day)}
+className="text-4xl font-lato cursor-pointer py-4 px-6 flex justify-between items-center hover:text-primary-focus"                onClick={() => toggleDetails(day)}
               >
+                                <span className="">
+
                 {day.day} ({day.focus})
+                </span>
+
               </h2>
+              <div className="divider"></div>
+
               {selectedDay === day && (
-                <ul className="list-reset">
-                  {day.exercises.map((exercise) => (
-                    <li key={exercise._id} className="my-4">
-                      <h3 className="text-2xl font-bold font-bebas-neue mb-2">
+                <ul className="space-y-4">
+                {day.exercises.map((exercise) => (
+                    <li key={exercise._id}                       
+                    className="text-xl font-lato px-6 py-4 flex flex-col"
+                    >
+                        <h3 className="text-3xl font-bebas-neue text-left">
                         {exercise.video ? (
                           <a
                             href={exercise.video}
@@ -67,25 +76,26 @@ function UserDashboard() {
                           <span>{exercise.name}</span>
                         )}
                       </h3>
-                      <p className="text-lg">
+                      <p className="text-lg font-lato">
                         <span className="font-semibold">Sets:</span> {exercise.sets}
                       </p>
-                      <p className="text-lg">
+                      <p className="text-lg font-lato">
                         <span className="font-semibold">Reps:</span> {exercise.reps}
                       </p>
-                      <p className="text-lg">
+                      <p className="text-lg font-lato">
                         <span className="font-semibold">Cadence:</span> {exercise.cadence}
                       </p>
                       {exercise.notes && exercise.notes.trim().length > 0 && (
-                        <p className="text-lg">
+                          <p className="text-lg font-lato">
                           <span className="font-semibold">Notes:</span> {exercise.notes}
                         </p>
                       )}
+                                              <div className="divider mt-4"></div>
+
                     </li>
                   ))}
                 </ul>
               )}
-            </div>
           </li>
         ))}
       </ul>

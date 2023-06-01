@@ -44,10 +44,11 @@ export default function RoutinesPage() {
   return (
     <Layout>
       <div>
-        <h1 className="text-4xl m-4 font-thin font-lato">Workouts</h1>
+      <h1 className="text-4xl font-lato py-4">
+Workouts</h1>
         {routines.length === 0 ? (
-          <div className="flex items-center flex-col">
-            <h1 className="text-4xl m-4 font-thin font-lato">
+      <div className="text-center mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+        <h1 className="text-4xl font-lato py-4">
               No Workouts Available
             </h1>
             <Image
@@ -62,11 +63,13 @@ export default function RoutinesPage() {
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
+      <div className="text-center mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
             <ul className="list-reset">
               {routines.map((workout) => (
-                <li key={workout._id} className="my-4 px-4">
-                  <div className="border rounded-lg p-4 shadow max-w-md mx-auto">
+                <li key={workout._id} className="bg-base-200 rounded-lg shadow-md">
+                  <div 
+                className="text-4xl font-lato cursor-pointer py-4 px-6 flex justify-center items-center hover:text-primary-focus"
+                  >
                     <Link href={`/user/dashboard/routines/${workout._id}`}>
                       <span>{workout.name}</span>
                     </Link>

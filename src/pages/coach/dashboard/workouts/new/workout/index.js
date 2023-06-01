@@ -344,7 +344,7 @@ export default function AddWorkout() {
           Add Day
         </button>
 
-        <button className={"btn bg-success text-success-content"} type="submit">
+        <button className={"btn bg-success"} type="submit">
           Submit
         </button>
       </form>

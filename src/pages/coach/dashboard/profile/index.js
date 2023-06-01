@@ -1,4 +1,4 @@
-import CoachLayout from "../../../../components/ui/coachLayout";
+import Layout from "../../../../components/ui/coachLayout";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -11,6 +11,8 @@ export default function Profile() {
   const [editMode, setEditMode] = useState(false);
   const [gender, setGender] = useState(user.biologicalGender);
   const [showAddGender, setShowAddGender] = useState(false);
+  const [name, setName] = useState(user.name);
+  const [lastName, setLastName] = useState(user.lastName);
 
   useEffect(() => {
     axios
@@ -23,6 +25,8 @@ export default function Profile() {
         if (!response.data.biologicalGender) {
           setShowAddGender(true);
         }
+        setName(response.data.name);
+        setLastName(response.data.lastName);
       })
       .catch((error) => console.error(error));
   }, [userId, token]);
@@ -32,11 +36,15 @@ export default function Profile() {
   };
 
   const handleSave = () => {
-    // Perform the API call to update the user's gender information
+    // Perform the API call to update the user's gender, name, and last name information
     axios
-      .put(process.env.NEXT_PUBLIC_API_URL + `/users/profile/${userId}`, { biologicalGender: gender }, {
-        headers: { Authorization: `${token}` },
-      })
+      .put(
+        process.env.NEXT_PUBLIC_API_URL + `/users/profile/${userId}`,
+        { biologicalGender: gender, name: name, lastName: lastName },
+        {
+          headers: { Authorization: `${token}` },
+        }
+      )
       .then((response) => {
         // Update the user object in state with the updated data
         setUser(response.data);
@@ -52,6 +60,8 @@ export default function Profile() {
   const handleCancel = () => {
     setEditMode(false);
     setGender(user.biologicalGender);
+    setName(user.name);
+    setLastName(user.lastName);
   };
 
   const handleGenderChange = (event) => {
@@ -63,41 +73,98 @@ export default function Profile() {
     setShowAddGender(false);
   };
 
+  const handleNameChange = (event) => {
+    setName(event.target.value);
+  };
+
+  const handleLastNameChange = (event) => {
+    setLastName(event.target.value);
+  };
+
   return (
-    <CoachLayout>
+    <Layout>
       <div className="flex flex-col items-center px-4">
         <h1 className="text-4xl m-4 font-thin font-lato">
           {user.name} {user.lastName} ({user.role})
         </h1>
         {editMode ? (
-          <div>
-            <label htmlFor="gender">Gender:</label>
-            <select className="select" id="gender" value={gender} onChange={handleGenderChange}>
-            <option disabled selected>Pick your gender</option>
-              <option value="MALE">Male</option>
-              <option value="FEMALE">Female</option>
-            </select>
-            <button className="btn btn-success" onClick={handleSave}>Save</button>
-            <button className="btn btn-error" onClick={handleCancel}>Cancel</button>
+          <div className="flex flex-col items-center">
+            <div className="p-4">
+              <input
+                type="text"
+                placeholder="Name"
+                id="name"
+                value={name}
+                onChange={handleNameChange}
+                className="input"
+              />
+            </div>
+            <div className="p-4">
+              <input
+                placeholder="Last name"
+                type="text"
+                id="lastName"
+                value={lastName}
+                onChange={handleLastNameChange}
+                className="input"
+              />
+            </div>
+
+            <div className="p-4">
+              <label htmlFor="gender" className="px-4">
+                Gender:
+              </label>
+              <select
+                className="select"
+                id="gender"
+                value={gender}
+                onChange={handleGenderChange}
+              >
+                <option disabled selected>
+                  Pick your gender
+                </option>
+                <option value="MALE">Male</option>
+                <option value="FEMALE">Female</option>
+              </select>
+            </div>
+
+            <button className="btn btn-success px-4" onClick={handleSave}>
+              Save
+            </button>
+            <button className="btn btn-error px-4" onClick={handleCancel}>
+              Cancel
+            </button>
           </div>
         ) : (
-          <div>
+          <div className="flex flex-col items-center">
             {showAddGender ? (
               <p>
-                Gender: None <button className="btn btn-success" onClick={handleAddGender}>Add Gender</button>
+                Gender: None{" "}
+                <button className="btn btn-success" onClick={handleAddGender}>
+                  Add Gender
+                </button>
               </p>
             ) : (
               <div>
-              <p>
-                Gender: {gender} <button className="btn btn-success" onClick={handleEdit}>Edit</button>
-              </p>
-                <p className="text-gray-500 text-sm">
-                This information is used for calculating body mass index and is not intended to offend or invalidate any gender identity.
-              </p>
-            </div>
-              
+                <div className="p-4">
+                  <p>Name: {name}</p>
+                </div>
+                <div className="p-4">
+                  <p>Last Name: {lastName}</p>
+                </div>
+                <div className="p-4">
+                  <p>Gender: {gender}</p>
+                </div>
+
+                <p className="text-gray-500 text-sm p-4">
+                  This information is used for calculating body mass index and
+                  is not intended to offend or invalidate any gender identity.
+                </p>
+                <button className="btn btn-success" onClick={handleEdit}>
+                  Edit
+                </button>
+              </div>
             )}
-            
           </div>
         )}
         <div className="flex items-center ml-4">
@@ -105,6 +172,6 @@ export default function Profile() {
           <p className="text-lg p-4 ">{user.email}</p>
         </div>
       </div>
-    </CoachLayout>
+    </Layout>
   );
 }
