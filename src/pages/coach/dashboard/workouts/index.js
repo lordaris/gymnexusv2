@@ -33,27 +33,28 @@ export default function RoutinesPage() {
 
   return (
     <Layout>
-    <div>
-      <h1 className="text-5xl m-4 font-thin font-lato">Workouts</h1>
-    </div>
-  
-    <div className="overflow-x-auto">
-      <ul className="list-reset">
-        {routines.map((workout) => (
-          <li key={workout._id} className="my-4 px-4">
-            <div className="border rounded-lg p-4 shadow max-w-md mx-auto">
-              <Link
-                href={`/coach/dashboard/workouts/${workout._id}`}
-                className="hover:text-primary text-3xl font-extrabold font-lato hover:text-primary-dark"
+      <div className="text-center mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+        <h1 className="text-4xl font-lato py-4">Workouts</h1>
+        <div className="overflow-x-auto">
+          <ul className="space-y-6 py-4">
+            {routines.map((workout) => (
+              <li
+                key={workout._id}
+                className="bg-base-200 rounded-lg shadow-md"
               >
-                {workout.name}
-              </Link>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </Layout>
-  
+                <div className="text-4xl font-lato cursor-pointer py-4 px-6 flex justify-center items-center hover:text-primary-focus">
+                  <Link
+                    href={`/coach/dashboard/workouts/${workout._id}`}
+                    className="hover:text-primary text-3xl font-extrabold font-lato hover:text-primary-dark"
+                  >
+                    {workout.name}
+                  </Link>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </Layout>
   );
 }
