@@ -90,34 +90,34 @@ export default function UserWorkouts() {
 
   return (
     <CoachLayout>
-      <div className="p-4">
-        <h1 className={"text-4xl font-thin font-lato"}>User: 
-          {" "}
-          {user.name ? user.name : user.email}{" "}
+      <div className="text-center mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 ">
+        <h1 className="text-lg lg:text-3xl font-lato py-4 ">
+          User: {user.name ? user.name : user.email}{" "}
           <button
-            className={"text-error hover:text-error-content ml-2"}
+            className={"text-error hover:text-error-content ml-2 py-4"}
             onClick={() => handleDeleteUser(userId, token, router)}
           >
             <BsTrashFill />
           </button>
         </h1>
-        {" "}
-        <ul className="mt-4">
-          <li className="font-semibold text-2xl mb-2 font-lato">Assigned workouts:</li>
+        <ul className="space-y-6 py-4">
+          <li className="text-4xl font-lato py-4">Assigned workouts:</li>
           {workouts.map((workout) => (
-            <li key={workout._id} className={"m-4 hover:text-accent"}>
-              <Link
-                href={`/coach/dashboard/workouts/${workout._id}`}
-                className="text-base"
-              >
-                {workout.name}
-              </Link>
-              <button
-                className={"text-error hover:text-error-content ml-2"}
-                onClick={() => handleUnassign(workout._id)}
-              >
-                <BsTrashFill />
-              </button>
+            <li key={workout._id} className="bg-base-200 rounded-lg shadow-md">
+              <div className="text-4xl font-lato cursor-pointer py-4 px-6 flex justify-between items-center hover:text-primary-focus">
+                <Link
+                  href={`/coach/dashboard/workouts/${workout._id}`}
+                  className="hover:text-primary  text-3xl font-extrabold font-lato hover:text-primary-dark"
+                >
+                  {workout.name}
+                </Link>
+                <button
+                  className={"text-error hover:text-error-content ml-2"}
+                  onClick={() => handleUnassign(workout._id)}
+                >
+                  <BsTrashFill />
+                </button>
+              </div>
             </li>
           ))}
         </ul>

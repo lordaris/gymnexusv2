@@ -69,14 +69,12 @@ export default function SignupPage() {
     <CoachLayout>
       <div
         className={
-          "min-h-screen flex flex-col h-full items-center justify-center p-10 text-base-content bg-base-100"
+          " flex flex-col h-full items-center justify-center p-10 text-base-content bg-base-100"
         }
       >
         <div className="">
           <div>
-            <h2 className="text-4xl m-4 font-thin font-lato">
-              Create a new user
-            </h2>
+            <h2 className="text-4xl m-4 font-lato">Create a new user</h2>
           </div>
           <form className="" onSubmit={handleSubmit}>
             <input type="hidden" name="remember" value="true" />
@@ -91,7 +89,9 @@ export default function SignupPage() {
                   type="email"
                   autoComplete="email"
                   required={true}
-                  className={"input input-ghost m-4 lg:w-full"}
+                  className={
+                    "input input-ghost m-4 lg:w-full input-bordered input-primary"
+                  }
                   placeholder="Email address"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
@@ -107,7 +107,9 @@ export default function SignupPage() {
                   type="password"
                   autoComplete="current-password"
                   required={true}
-                  className={"input input-ghost m-4 lg:w-full"}
+                  className={
+                    "input  m-4 lg:w-full input-bordered input-primary"
+                  }
                   placeholder="Password"
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}

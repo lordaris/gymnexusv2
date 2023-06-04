@@ -32,15 +32,18 @@ export default function UsersPage() {
 
   return (
     <Layout>
-      <div>
-        <h1 className="text-4xl m-4 font-thin font-lato">Users</h1>
+      <div className="text-center mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+        <h1 className="text-4xl font-lato py-4">Users</h1>
         <div className="overflow-x-auto">
-          <ul className="list-reset">
+          <ul className="space-y-6 py-4">
             {users.map((user) => (
-              <li key={user._id} className="my-4 px-4">
-                <div className="border rounded-lg p-4 shadow max-w-md mx-auto">
-                  <Link href={`/coach/dashboard/users/${user._id}`}>
-                  {user.name ? user.name : user.email}
+              <li key={user._id} className="bg-base-200 rounded-lg shadow-md">
+                <div className="text-4xl font-lato cursor-pointer py-4 px-6 flex justify-center items-center hover:text-primary-focus">
+                  <Link
+                    href={`/coach/dashboard/users/${user._id}`}
+                    className="hover:text-primary text-3xl font-extrabold font-lato hover:text-primary-dark"
+                  >
+                    {user.name ? user.name : user.email}
                   </Link>
                 </div>
               </li>

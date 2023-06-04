@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
+
 export default function LoginRedirect() {
   const router = useRouter();
   useEffect(() => {
