@@ -46,7 +46,7 @@ export default function Dashboard() {
   return (
     <Layout>
       <div className="flex items-center flex-col">
-        <h1 className="text-4xl m-4 font-thin font-lato">Coach Dashboard</h1>
+        <h1 className="text-4xl m-4 font-thin font-lato">User Dashboard</h1>
         <div className="mt-8 grid grid-cols-1 gap-4">
           <div>
             <Link href={"/user/dashboard/routines"}>
