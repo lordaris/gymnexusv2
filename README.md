@@ -53,5 +53,3 @@ The difference between the previous version and this one is that this is made en
 - [ ] Improve the UX
 - [ ] Improve the security of the app
 - [ ] Improve the code, maybe using a repository pattern or SOLID principles which will make the code more readable and easier to maintain
-
-

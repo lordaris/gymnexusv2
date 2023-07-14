@@ -48,25 +48,31 @@ export default function AssignWorkout() {
 
   return (
     <CoachLayout>
-  <div>
-    <h2 className="text-4xl font-thin font-lato">Assign Workout</h2>
-    <ul>
-      {coachWorkouts.map((workout) => (
-        <li key={workout.id}>
-          <Link href={`/coach/dashboard/workouts/${workout._id}`} className=" hover:text-neutral-content">
-            {workout.name}
-          </Link>{" "}
-          <button
-            className="text-primary hover:text-primary-focus font-extrabold"
-            onClick={() => handleAssign(workout._id)}
-          >
-            Add
-          </button>
-        </li>
-      ))}
-    </ul>
-  </div>
-</CoachLayout>
-
+      <div className="text-center mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+        <h2 className="text-4xl font-lato py-4">Assign Workout</h2>
+        <div className="overflow-x-auto">
+          <ul className="space-y-6 py-4">
+            {coachWorkouts.map((workout) => (
+              <li key={workout.id} className="bg-base-200 rounded-lg shadow-md">
+                <div className="text-4xl font-lato cursor-pointer py-4 px-6 flex justify-between items-center hover:text-primary-focus">
+                  <Link
+                    href={`/coach/dashboard/workouts/${workout._id}`}
+                    className="hover:text-primary text-3xl font-extrabold font-lato hover:text-primary-dark"
+                  >
+                    {workout.name }
+                  </Link>
+                  <button
+                    className="px-4 text-primary hover:text-primary-focus font-extrabold"
+                    onClick={() => handleAssign(workout._id)}
+                  >
+                    +
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </CoachLayout>
   );
 }

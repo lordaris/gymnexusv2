@@ -84,9 +84,13 @@ export default function Profile() {
   return (
     <Layout>
       <div className="flex flex-col items-center px-4">
-        <h1 className="text-4xl m-4 font-thin font-lato">
+        <h1 className="text-4xl font-lato py-4">
           {user.name} {user.lastName} ({user.role})
         </h1>
+        <div className="flex items-center ml-4">
+          <MdEmail className="mr-1" />
+          <p className="text-lg p-4 ">{user.email}</p>
+        </div>
         {editMode ? (
           <div className="flex flex-col items-center">
             <div className="p-4">
@@ -145,20 +149,19 @@ export default function Profile() {
                 </button>
               </p>
             ) : (
-              <div>
-                <div className="p-4">
+              <div className="p-4 text-2xl font-lato ">
+                <div >
                   <p>Name: {name}</p>
                 </div>
-                <div className="p-4">
+                <div >
                   <p>Last Name: {lastName}</p>
                 </div>
-                <div className="p-4">
+                <div >
                   <p>Gender: {gender}</p>
                 </div>
 
                 <p className="text-gray-500 text-sm p-4">
-                  This information is used for calculating body mass index and
-                  is not intended to offend or invalidate any gender identity.
+                  Gender is used for calculating body mass index and is not intended to offend or invalidate any gender identity.
                 </p>
                 <button className="btn btn-success" onClick={handleEdit}>
                   Edit
@@ -167,10 +170,7 @@ export default function Profile() {
             )}
           </div>
         )}
-        <div className="flex items-center ml-4">
-          <MdEmail className="mr-1" />
-          <p className="text-lg p-4 ">{user.email}</p>
-        </div>
+      
       </div>
     </Layout>
   );
