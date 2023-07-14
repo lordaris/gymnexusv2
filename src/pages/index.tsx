@@ -24,18 +24,16 @@ export default function Home() {
             for personalized routines and seamless tracking
           </p>
           {/* center button */}
-          <div className={"flex justify-center"}>
+          <div className={"flex justify-center py-4"}>
             <Link href={"/coach/signup"} className={"pb-4"}>
               <button className={"btn btn-primary btn-lg px-24 "}>
-                I am new
-              </button>
+Register              </button>
             </Link>
           </div>
-          <Link href={"/login"} className={"flex justify-center link-primary"}>
-            already a member?
-          </Link>
+          <Link href={"/login"} className={"text-3xl font-bebas flex justify-center link-primary"}>
+Login!          </Link>
           
-          <Link className="flex justify-center font-bold py-10" href={"https://bmc.link/lordaris"}>Buy me a coffee!</Link>
+          <Link className="flex font-lato justify-center font-bold py-10" href={"https://bmc.link/lordaris"}>Donations!</Link>
         </div>
       </div>
     </div>

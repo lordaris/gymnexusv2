@@ -51,10 +51,10 @@ export default function LoginPage() {
       <Head>
         <title>gymNEXUS - Login</title>
       </Head>
-      <div className="min-h-screen flex flex-col h-full items-center justify-center p-10 text-base-content bg-base-100">
+      <div className="min-h-screen flex flex-col h-full items-center justify-center text-base-content bg-base-100">
         <div className="maw-w-md">
           <div>
-            <h1 className="font-thin font-lato text-4xl m-4">
+            <h1 className=" font-lato text-4xl m-4">
               Login to your account
             </h1>
           </div>
@@ -71,7 +71,7 @@ export default function LoginPage() {
                   type="email"
                   autoComplete="email"
                   required
-                  className="input input-ghost m-4 lg:w-full"
+                  className="input input-ghost m-4 w-full"
                   placeholder="Email address"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
@@ -87,7 +87,7 @@ export default function LoginPage() {
                   type="password"
                   autoComplete="current-password"
                   required
-                  className="input input-ghostm-4 m-4 lg:w-full"
+                  className="input input-ghostm-4 m-4 w-full"
                   placeholder="Password"
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
