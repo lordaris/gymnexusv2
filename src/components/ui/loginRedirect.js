@@ -4,17 +4,29 @@ import { useRouter } from "next/router";
 
 export default function LoginRedirect() {
   const router = useRouter();
+
   useEffect(() => {
+    // Check if token exists
     const token = Cookies.get("token");
-    if (token) {
-      // Use the router to redirect to the appropriate dashboard
-      const role = Cookies.get("role");
+    const role = Cookies.get("role");
+
+    if (token && role) {
+      console.log(
+        "User already authenticated, redirecting based on role:",
+        role
+      );
+
+      // Redirect based on role
       if (role === "ATHLETE") {
         router.push("/user/dashboard");
-      }
-      if (role === "COACH") {
+      } else if (role === "COACH") {
         router.push("/coach/dashboard");
       }
+    } else {
+      console.log("No authentication found, staying on login/signup page");
     }
   }, [router]);
+
+  // This component doesn't render anything
+  return null;
 }

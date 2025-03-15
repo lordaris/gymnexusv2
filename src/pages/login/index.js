@@ -7,6 +7,7 @@ import Head from "next/head";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -20,33 +21,43 @@ export default function LoginPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
+    setErrorMessage("");
 
     try {
+      console.log("Attempting login with:", { email });
       const response = await axios.post(
-        process.env.NEXT_PUBLIC_API_URL + `/users/login`,
-        {
-          email,
-          password,
-        }
+        `${process.env.NEXT_PUBLIC_API_URL}/users/login`,
+        { email, password }
       );
-      const token = response.data.token;
-      Cookies.set("token", token);
-      const role = response.data.role;
-      Cookies.set("role", role);
-      const user = response.data.id;
-      Cookies.set("user", user);
 
+      console.log("Login response:", response.status);
+
+      const { token, role, id } = response.data;
+
+      // Set cookies
+      Cookies.set("token", token);
+      Cookies.set("role", role);
+      Cookies.set("user", id);
+
+      toast.success("Login successful!");
+
+      // Redirect based on role
       if (role === "ATHLETE") {
         router.push("/user/dashboard");
       } else {
         router.push("/coach/dashboard");
       }
     } catch (error) {
-      // Safely access error response or use a fallback message
-      const errorMessage =
+      console.error("Login error:", error);
+
+      // Display detailed error information
+      const status = error.response?.status;
+      const errorMsg =
         error.response?.data?.message ||
-        "Login failed. Please check your credentials and try again.";
-      setErrorMessage(errorMessage);
+        "Login failed. Please check your credentials.";
+
+      setErrorMessage(`Error (${status || "unknown"}): ${errorMsg}`);
+      toast.error(errorMsg);
     } finally {
       setIsLoading(false);
     }
