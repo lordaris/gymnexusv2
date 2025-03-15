@@ -4,6 +4,10 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import LoginRedirect from "../../components/ui/loginRedirect";
 import Head from "next/head";
+import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
+import Link from "next/link";
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,9 +19,9 @@ export default function LoginPage() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setIsLoading(true);
 
     try {
-      setIsLoading(true); // Set isLoading to true
       const response = await axios.post(
         process.env.NEXT_PUBLIC_API_URL + `/users/login`,
         {
@@ -26,23 +30,25 @@ export default function LoginPage() {
         }
       );
       const token = response.data.token;
-      Cookies.set("token", token); // Store token in cookie
-      console.log(response.data);
+      Cookies.set("token", token);
       const role = response.data.role;
-      Cookies.set("role", role); // Store role in cookie
-      const user = response.data.id; // Store id in cookie
+      Cookies.set("role", role);
+      const user = response.data.id;
       Cookies.set("user", user);
 
-      // Use the router to redirect to the appropriate dashboard
       if (role === "ATHLETE") {
         router.push("/user/dashboard");
       } else {
         router.push("/coach/dashboard");
       }
     } catch (error) {
-      setErrorMessage(error.response.data.message);
+      // Safely access error response or use a fallback message
+      const errorMessage =
+        error.response?.data?.message ||
+        "Login failed. Please check your credentials and try again.";
+      setErrorMessage(errorMessage);
     } finally {
-      setIsLoading(false); // Set isLoading to false
+      setIsLoading(false);
     }
   };
 
@@ -51,63 +57,67 @@ export default function LoginPage() {
       <Head>
         <title>gymNEXUS - Login</title>
       </Head>
-      <div className="min-h-screen flex flex-col h-full items-center justify-center text-base-content bg-base-100">
-        <div className="maw-w-md">
-          <div>
-            <h1 className=" font-lato text-4xl m-4">
-              Login to your account
-            </h1>
+      <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-base-100">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-lato mb-2">Login to your account</h1>
+            <p className="text-base-content/70">Welcome back to gymNEXUS</p>
           </div>
-          <form onSubmit={handleSubmit}>
+
+          {errorMessage && (
+            <div className="alert alert-error shadow-lg mb-6">
+              <span>{errorMessage}</span>
+            </div>
+          )}
+
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <input type="hidden" name="remember" value="true" />
-            <div className={"flex flex-col"}>
-              <div>
-                <label htmlFor="email-address" className="sr-only">
-                  Email
-                </label>
-                <input
-                  id="email-address"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  className="input input-ghost m-4 w-full"
-                  placeholder="Email address"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                />
-              </div>
-              <div>
-                <label htmlFor="password" className="sr-only">
-                  Password
-                </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  className="input input-ghostm-4 m-4 w-full"
-                  placeholder="Password"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                />
-              </div>
-              {errorMessage && (
-              <div className="mt-2 text-sm text-red-600">{errorMessage}</div>
-            )}
-              <button
+
+            <Input
+              id="email-address"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required={true}
+              placeholder="Email address"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              autoComplete="current-password"
+              required={true}
+              placeholder="Password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+
+            <div>
+              <Button
                 type="submit"
-                className="btn btn-primary w-full m-4"
+                variant="primary"
+                size="lg"
                 disabled={isLoading}
+                fullWidth
               >
-                {isLoading ? "Loading..." : "Login"}
-              </button>
+                {isLoading ? "Logging in..." : "Login"}
+              </Button>
             </div>
 
-            
-
-            
+            <div className="text-center mt-4">
+              <p className="text-base-content/70">
+                Don't have an account?{" "}
+                <Link
+                  href="/coach/signup"
+                  className="text-primary hover:underline"
+                >
+                  Register here
+                </Link>
+              </p>
+            </div>
           </form>
         </div>
       </div>

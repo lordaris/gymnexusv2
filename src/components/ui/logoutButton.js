@@ -1,16 +1,15 @@
-import { useState } from "react";
-import Cookies from "js-cookie";
 import { useRouter } from "next/router";
-import Link from "next/link";
+import Cookies from "js-cookie";
+import { Button } from "./button";
 
-export default function LogoutButton() {
+export default function LogoutButton({ variant = "ghost", size = "md" }) {
   const router = useRouter();
 
   const handleLogout = () => {
-    Cookies.remove("token"); // Remove token from cookie
-    Cookies.remove("role"); // Remove role from cookie
-    Cookies.remove("user"); // Remove user from cookie
-    router.push("/").then(()=>{}); // Redirect to home page
+    Cookies.remove("token");
+    Cookies.remove("role");
+    Cookies.remove("user");
+    router.push("/");
   };
 
   const handleLogoutConfirmation = () => {
@@ -20,14 +19,13 @@ export default function LogoutButton() {
   };
 
   return (
-    <>
-      <a
-        href="#logout"
-        className="text-error"
-        onClick={handleLogoutConfirmation}
-      >
-        Logout{" "}
-      </a>
-    </>
+    <Button
+      variant={variant}
+      size={size}
+      onClick={handleLogoutConfirmation}
+      className="text-error hover:bg-error hover:bg-opacity-10"
+    >
+      Logout
+    </Button>
   );
 }

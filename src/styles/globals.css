@@ -3,14 +3,89 @@
 @tailwind utilities;
 
 nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 100;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
 }
 
 main {
-    padding-top: 64px;
+  padding-top: 64px;
 }
 
+:root {
+  --font-lato: "Lato", sans-serif;
+  --font-bebas: "Bebas Neue", sans-serif;
+}
+
+body {
+  @apply font-lato text-base;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-lato font-semibold;
+}
+
+/* Consistent spacing */
+.container-pad {
+  @apply px-4 sm:px-6 lg:px-8 py-6;
+}
+
+.section-spacing {
+  @apply my-8;
+}
+
+/* Card consistency */
+.card {
+  @apply shadow-md rounded-lg overflow-hidden;
+}
+
+/* Link consistency */
+a:not(.btn):not(.no-style) {
+  @apply text-primary hover:text-primary-focus transition-colors duration-200;
+}
+
+/* Button hover effects */
+.btn {
+  @apply transition-all duration-200;
+}
+
+/* Consistent form elements */
+.input,
+.textarea,
+.select {
+  @apply border-base-300 focus:border-primary focus:ring-1 focus:ring-primary;
+}
+
+/* Mobile navigation helpers */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+}
+
+main {
+  padding-top: 64px;
+}
+
+/* Animation utilities */
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

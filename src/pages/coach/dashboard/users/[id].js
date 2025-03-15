@@ -6,124 +6,178 @@ import axios from "axios";
 import Link from "next/link";
 import { BsTrashFill } from "react-icons/bs";
 import { toast } from "react-toastify";
+import { PageHeader } from "../../../../components/ui/pageHeader";
+import { Button } from "../../../../components/ui/button";
+import { Card } from "../../../../components/ui/card";
+import { ListItem } from "../../../../components/ui/listItem";
 
 export default function UserWorkouts() {
   const [workouts, setWorkouts] = useState([]);
-  const [coachWorkouts, setCoachWorkouts] = useState([]);
   const [user, setUser] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const userId = router.query.id;
   const coachId = Cookies.get("user");
-
   const token = Cookies.get("token");
 
+  useEffect(() => {
+    if (!userId) return;
+
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const [workoutsResponse, userResponse] = await Promise.all([
+          axios.get(
+            process.env.NEXT_PUBLIC_API_URL +
+              `/workouts/list/assigned/${userId}`,
+            { headers: { Authorization: `${token}` } }
+          ),
+          axios.get(
+            process.env.NEXT_PUBLIC_API_URL + `/users/by-user-id/${userId}`,
+            { headers: { Authorization: `${token}` } }
+          ),
+        ]);
+
+        setWorkouts(workoutsResponse.data);
+        setUser(userResponse.data);
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to load data");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [userId, token]);
+
   const handleUnassign = (workoutId) => {
-    const confirm = window.confirm(
-      "¿Estás seguro de que quieres desasignar esta rutina?"
-    );
-    if (confirm) {
+    if (window.confirm("Are you sure you want to unassign this workout?")) {
       axios
         .put(
           process.env.NEXT_PUBLIC_API_URL +
             `/workouts/unassign/${workoutId}/${userId}`,
           {},
-          {
-            headers: { Authorization: `${token}` },
-          }
+          { headers: { Authorization: `${token}` } }
         )
-        .then((response) => {
-          // Update the list of assigned workouts
+        .then(() => {
+          toast.success("Workout unassigned successfully");
           setWorkouts((prevWorkouts) =>
             prevWorkouts.filter((workout) => workout._id !== workoutId)
           );
         })
-        .catch((error) => console.error(error));
+        .catch((error) => {
+          console.error(error);
+          toast.error("Failed to unassign workout");
+        });
     }
   };
-  const handleDeleteUser = (userId, token, router) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
+
+  const handleDeleteUser = () => {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this user? This action cannot be undone."
+      )
+    ) {
       axios
         .delete(process.env.NEXT_PUBLIC_API_URL + `/users/profile/${userId}`, {
           headers: { Authorization: `${token}` },
         })
-        .then((response) => {
-          toast.success("User deleted successfully", {
-            position: "bottom-center",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
+        .then(() => {
+          toast.success("User deleted successfully");
           router.push("/coach/dashboard/users");
         })
-        .catch((error) => console.error(error));
+        .catch((error) => {
+          console.error(error);
+          toast.error("Failed to delete user");
+        });
     }
   };
 
-  useEffect(() => {
-    axios
-      .get(
-        process.env.NEXT_PUBLIC_API_URL + `/workouts/list/assigned/${userId}`,
-        {
-          headers: { Authorization: `${token}` },
-        }
-      )
-      .then((response) => {
-        setWorkouts(response.data);
-      })
-      .catch((error) => console.error(error));
-  }, [userId, token]);
+  if (isLoading) {
+    return (
+      <CoachLayout>
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        </div>
+      </CoachLayout>
+    );
+  }
 
-  useEffect(() => {
-    axios
-      .get(process.env.NEXT_PUBLIC_API_URL + `/users/by-user-id/${userId}`, {
-        headers: { Authorization: `${token}` },
-      })
-      .then((response) => {
-        setUser(response.data);
-      })
-      .catch((error) => console.error(error));
-  }, [userId, token]);
+  const displayName = user.name || user.email;
 
   return (
     <CoachLayout>
-      <div className="text-center mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 ">
-        <h1 className="text-lg lg:text-3xl font-lato py-4 ">
-          User: {user.name ? user.name : user.email}{" "}
-          <button
-            className={"text-error hover:text-error-content ml-2 py-4"}
-            onClick={() => handleDeleteUser(userId, token, router)}
-          >
-            <BsTrashFill />
-          </button>
-        </h1>
-        <ul className="space-y-6 py-4">
-          <li className="text-4xl font-lato py-4">Assigned workouts:</li>
-          {workouts.map((workout) => (
-            <li key={workout._id} className="bg-base-200 rounded-lg shadow-md">
-              <div className="text-4xl font-lato cursor-pointer py-4 px-6 flex justify-between items-center hover:text-primary-focus">
-                <Link
-                  href={`/coach/dashboard/workouts/${workout._id}`}
-                  className="hover:text-primary  text-3xl font-extrabold font-lato hover:text-primary-dark"
-                >
-                  {workout.name}
-                </Link>
-                <button
-                  className={"text-error hover:text-error-content ml-2"}
-                  onClick={() => handleUnassign(workout._id)}
-                >
-                  <BsTrashFill />
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
-        <Link href={`/coach/dashboard/users/assign/${user._id}`}>
-          <button className={"btn btn-primary mt-4"}>Assign workout</button>
-        </Link>
+      <div className="max-w-4xl mx-auto px-4 py-6">
+        <PageHeader
+          title={`User: ${displayName}`}
+          action={
+            <Button
+              variant="error"
+              size="md"
+              onClick={handleDeleteUser}
+              className="flex items-center gap-2"
+            >
+              <BsTrashFill /> Delete User
+            </Button>
+          }
+        />
+
+        <Card
+          title="Assigned Workouts"
+          className="mb-8"
+          actionButton={
+            <Link href={`/coach/dashboard/users/assign/${user._id}`}>
+              <Button variant="primary" size="sm">
+                Assign Workout
+              </Button>
+            </Link>
+          }
+        >
+          {workouts.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-base-content/70 mb-4">
+                No workouts assigned yet
+              </p>
+              <Link href={`/coach/dashboard/users/assign/${user._id}`}>
+                <Button variant="primary">Assign a Workout</Button>
+              </Link>
+            </div>
+          ) : (
+            <ul className="space-y-4">
+              {workouts.map((workout) => (
+                <ListItem
+                  key={workout._id}
+                  title={workout.name}
+                  onClick={() =>
+                    router.push(`/coach/dashboard/workouts/${workout._id}`)
+                  }
+                  actionButton={
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-error hover:bg-error hover:bg-opacity-10"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleUnassign(workout._id);
+                      }}
+                    >
+                      <BsTrashFill />
+                    </Button>
+                  }
+                />
+              ))}
+            </ul>
+          )}
+        </Card>
+
+        <div className="flex justify-center">
+          <Link href="/coach/dashboard/users">
+            <Button variant="ghost" size="md">
+              Back to Users List
+            </Button>
+          </Link>
+        </div>
       </div>
     </CoachLayout>
   );

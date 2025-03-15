@@ -1,26 +1,45 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import LogoutButton from "./logoutButton";
 import Head from "next/head";
 
-// TODO: Modify the navbar to be more responsive and with a better design
-// TODO: Add a logo to the navbar
-
 const CoachLayout = ({ children }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const router = useRouter();
 
-  const SecurityCheck = () => {
+  useEffect(() => {
+    // Security check
     const role = Cookies.get("role");
-    const router = useRouter();
-
     if (!role) {
       router.push("/");
     } else if (role !== "COACH") {
       router.push("/user/dashboard");
     }
-  };
+  }, [router]);
+
+  const navItems = [
+    {
+      label: "Workouts",
+      dropdown: true,
+      items: [
+        { label: "List", href: "/coach/dashboard/workouts" },
+        { label: "Create", href: "/coach/dashboard/workouts/new/workout" },
+      ],
+    },
+    {
+      label: "Clients",
+      dropdown: true,
+      items: [
+        { label: "List", href: "/coach/dashboard/users" },
+        { label: "Create", href: "/coach/dashboard/users/createuser" },
+      ],
+    },
+    {
+      label: "Profile",
+      href: "/coach/dashboard/profile",
+    },
+  ];
 
   return (
     <>
@@ -28,12 +47,16 @@ const CoachLayout = ({ children }) => {
         <title>gymNEXUS - Coach Dashboard</title>
       </Head>
       <div className="drawer">
-        <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-content flex flex-col">
-          {/*Navbar*/}
-          <div className="w-full navbar bg-base-300">
+        <input id="drawer-toggle" type="checkbox" className="drawer-toggle" />
+
+        <div className="drawer-content flex flex-col min-h-screen">
+          {/* Navbar */}
+          <header className="w-full navbar bg-base-300 shadow-md z-10">
             <div className="flex-none lg:hidden">
-              <label htmlFor="my-drawer-3" className="btn btn-square btn-ghost">
+              <label
+                htmlFor="drawer-toggle"
+                className="btn btn-square btn-ghost"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -45,130 +68,111 @@ const CoachLayout = ({ children }) => {
                     strokeLinejoin="round"
                     strokeWidth="2"
                     d="M4 6h16M4 12h16M4 18h16"
-                  ></path>
+                  />
                 </svg>
               </label>
             </div>
-            <Link href={"/coach/dashboard"} className="flex-1">
-              <h1 className="text-5xl px-10">
-                <span className={"font-thin font-lato"}>gym</span>
-                <span className="font-bebas text-primary ">NEXUS</span>
-              </h1>
-            </Link>{" "}
-            <div className="flex-none hidden lg:block">
-              <ul className="menu menu-horizontal px-10 ">
-                <li tabIndex={0}>
-                  <p className={""}>
-                    Workouts
-                    <svg
-                      className="fill-current"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
-                    </svg>
-                  </p>
-                  <ul className="p-2 bg-base-200">
-                    <li>
-                      <Link href={"/coach/dashboard/workouts"}>List</Link>
-                    </li>
-                    <li>
-                      <Link href={"/coach/dashboard/workouts/new/workout"}>
-                        Create
-                      </Link>
-                    </li>
-                  </ul>
-                </li>
 
-                <li tabIndex={0}>
-                  <p>
-                    Clients
-                    <svg
-                      className="fill-current"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
+            <div className="flex-1">
+              <Link
+                href="/coach/dashboard"
+                className="text-xl md:text-3xl lg:text-4xl px-4 md:px-6"
+              >
+                <span className="font-thin font-lato">gym</span>
+                <span className="font-bebas text-primary">NEXUS</span>
+              </Link>
+            </div>
+
+            <div className="flex-none hidden lg:block">
+              <ul className="menu menu-horizontal px-2 gap-1">
+                {navItems.map((item, index) =>
+                  item.dropdown ? (
+                    <li
+                      key={index}
+                      className="dropdown dropdown-end"
+                      tabIndex={0}
                     >
-                      <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
-                    </svg>
-                  </p>
-                  <ul className="p-2 bg-base-200">
-                    <li>
-                      <Link href={"/coach/dashboard/users"}>List</Link>
+                      <button className="btn btn-ghost m-1">
+                        {item.label}
+                        <svg
+                          className="fill-current h-4 w-4 ml-1"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </button>
+                      <ul className="dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box w-52">
+                        {item.items.map((subItem, subIndex) => (
+                          <li key={subIndex}>
+                            <Link
+                              href={subItem.href}
+                              className="btn btn-ghost btn-sm justify-start"
+                            >
+                              {subItem.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
                     </li>
-                    <li>
-                      <Link href={"/coach/dashboard/users/createuser"}>
-                        Create
+                  ) : (
+                    <li key={index}>
+                      <Link href={item.href} className="btn btn-ghost m-1">
+                        {item.label}
                       </Link>
                     </li>
-                  </ul>
-                </li>
-                <li>
-                  <Link href={"/coach/dashboard/profile"}>Profile</Link>
-                </li>
+                  )
+                )}
                 <li>
                   <LogoutButton />
                 </li>
               </ul>
             </div>
-          </div>
-          {/*content*/}
-          <div className={"text-center"}>
-            <main className="">{children}</main>
-          </div>{" "}
+          </header>
+
+          {/* Main content */}
+          <main className="flex-grow">{children}</main>
         </div>
+
+        {/* Drawer/sidebar for mobile */}
         <div className="drawer-side">
-          <label htmlFor="my-drawer-3" className="drawer-overlay"></label>
-          <ul className="menu p-2 w-80 bg-base-100">
-            {/*Sidebar content*/}
-            <li>
-              <div className="dropdown dropdown-bottom">
-                <label tabIndex={0} className=" m-1">
-                  Workouts
-                </label>
-                <ul
-                  tabIndex={0}
-                  className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
-                >
-                  <li>
-                    <Link href={"/coach/dashboard/workouts"}>List</Link>
-                  </li>
-                  <li>
-                    <Link href={"/coach/dashboard/workouts/new/workout"}>
-                      Create
-                    </Link>
-                  </li>
-                </ul>
-              </div>
+          <label htmlFor="drawer-toggle" className="drawer-overlay"></label>
+          <ul className="menu p-4 w-80 h-full bg-base-200 text-base-content">
+            <li className="mb-6">
+              <Link href="/coach/dashboard" className="text-2xl">
+                <span className="font-thin font-lato">gym</span>
+                <span className="font-bebas text-primary">NEXUS</span>
+              </Link>
             </li>
-            <li>
-              <div className="dropdown dropdown-bottom">
-                <label tabIndex={0} className=" m-1">
-                  Clients
-                </label>
-                <ul
-                  tabIndex={0}
-                  className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
-                >
-                  <li>
-                    <Link href={"/coach/dashboard/users"}>List</Link>
-                  </li>
-                  <li>
-                    <Link href={"/coach/dashboard/users/createuser"}>
-                      Create
-                    </Link>
-                  </li>
-                </ul>
-              </div>{" "}
-            </li>
-            <li>
-              <Link href={"/coach/dashboard/profile"}>Profile</Link>
-            </li>
-            <li>
-              <LogoutButton />
+
+            {navItems.map((item, index) =>
+              item.dropdown ? (
+                <li key={index} className="mb-2">
+                  <span className="font-semibold">{item.label}</span>
+                  <ul className="pl-4">
+                    {item.items.map((subItem, subIndex) => (
+                      <li key={subIndex}>
+                        <Link href={subItem.href} className="py-2">
+                          {subItem.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ) : (
+                <li key={index} className="mb-2">
+                  <Link href={item.href} className="py-2">
+                    {item.label}
+                  </Link>
+                </li>
+              )
+            )}
+            <li className="mt-6">
+              <LogoutButton variant="error" size="md" />
             </li>
           </ul>
         </div>

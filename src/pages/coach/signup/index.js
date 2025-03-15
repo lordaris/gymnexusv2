@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import LoginRedirect from "../../../components/ui/loginRedirect";
 import { toast } from "react-toastify";
+
 export default function SignupPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -10,8 +11,8 @@ export default function SignupPage() {
   const [role, setRole] = useState("COACH");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [isPasswordValid, setIsPasswordValid] = useState(false); // New state for password validity
-  const [PasswordChecklist, setPasswordChecklist] = useState(null); // State to store the dynamically imported component
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [PasswordChecklist, setPasswordChecklist] = useState(null);
 
   LoginRedirect();
 
@@ -40,7 +41,14 @@ export default function SignupPage() {
       });
       router.push("/login");
     } catch (error) {
-      alert(error.response.data.message);
+      // Fix the error handling to safely access error.response
+      const errorMessage =
+        error.response?.data?.message ||
+        "An error occurred during signup. Please try again.";
+
+      // Use toast instead of alert for consistent UI
+      toast.error(errorMessage);
+      setErrorMessage(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -63,9 +71,16 @@ export default function SignupPage() {
       <div className="max-w-md">
         <div>
           <h1 className="text-4xl m-4 font-lato">
-            Create an account, is free!
+            Create an account, it's free!
           </h1>
         </div>
+
+        {errorMessage && (
+          <div className="alert alert-error shadow-lg mb-6">
+            <span>{errorMessage}</span>
+          </div>
+        )}
+
         <form className="flex flex-col" onSubmit={handleSubmit}>
           <input type="hidden" name="remember" value="true" />
           <div className="flex flex-col">
@@ -100,12 +115,12 @@ export default function SignupPage() {
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
               />
-              {PasswordChecklist && ( // Render the PasswordChecklist if it has been dynamically imported
+              {PasswordChecklist && (
                 <PasswordChecklist
                   rules={["minLength", "specialChar", "number", "capital"]}
                   minLength={8}
                   value={password}
-                  onChange={handlePasswordValidityChange} // Pass the handler function
+                  onChange={handlePasswordValidityChange}
                 />
               )}
             </div>
@@ -118,7 +133,7 @@ export default function SignupPage() {
               <button
                 type="submit"
                 className="btn btn-primary m-4"
-                disabled={isLoading || !isPasswordValid} // Disable the button if loading or password is invalid
+                disabled={isLoading || !isPasswordValid}
               >
                 {isLoading ? "Loading..." : "Create Account"}
               </button>
