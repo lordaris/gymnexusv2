@@ -1,9 +1,14 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Layout from "../../../../../../../components/ui/coachLayout";
 import Cookie from "js-cookie";
 import { toast } from "react-toastify";
+import axios from "axios";
+import { Button } from "../../../../../../../components/ui/button";
+import { Input } from "../../../../../../../components/ui/input";
+import { TextArea } from "../../../../../../../components/ui/textarea";
+import { PageHeader } from "../../../../../../../components/ui/pageHeader";
+import { Card } from "../../../../../../../components/ui/card";
 
 function ExerciseEditPage() {
   const [workout, setWorkout] = useState(null);
@@ -14,155 +19,231 @@ function ExerciseEditPage() {
     reps: "",
     cadence: "",
     notes: "",
+    video: "",
   });
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+
   const router = useRouter();
   const token = Cookie.get("token");
   const { workoutId, dayId, exerciseId } = router.query;
 
   useEffect(() => {
-    if (workoutId) {
-      axios
-        .get(
-          process.env.NEXT_PUBLIC_API_URL + `/workouts/list/by-id/${workoutId}`,
-          {
-            headers: { Authorization: `${token}` },
-          }
-        )
-        .then((response) => {
-          const day = response.data.days.find((d) => d._id === dayId);
-          const exercise = day.exercises.find((e) => e._id === exerciseId);
-          setWorkout({ ...response.data, days: [day] });
-          setExercise(exercise);
-          setFormValues({
-            name: exercise.name,
-            sets: exercise.sets,
-            reps: exercise.reps,
-            cadence: exercise.cadence,
-            notes: exercise.notes,
-            video: exercise.video,
-          });
-        })
-        .catch((error) => console.error(error));
-    }
-  }, [workoutId, dayId, exerciseId, token]);
+    if (!workoutId || !dayId || !exerciseId) return;
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const updatedExercise = { ...formValues };
-    axios
-      .put(
-        process.env.NEXT_PUBLIC_API_URL +
-          `/workouts/update/${workoutId}/${dayId}/${exerciseId}`,
-        updatedExercise,
-        { headers: { Authorization: `${token}` } }
-      )
-      .then(() => {
-        toast.success("Exercise modified successfully", {
-          position: "bottom-center",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
+    const fetchExerciseData = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/workouts/list/by-id/${workoutId}`,
+          { headers: { Authorization: token } }
+        );
+
+        const workoutData = response.data;
+        const day = workoutData.days.find((d) => d._id === dayId);
+
+        if (!day) {
+          toast.error("Day not found");
+          router.push(`/coach/dashboard/workouts/${workoutId}`);
+          return;
+        }
+
+        const exercise = day.exercises.find((e) => e._id === exerciseId);
+
+        if (!exercise) {
+          toast.error("Exercise not found");
+          router.push(`/coach/dashboard/workouts/${workoutId}`);
+          return;
+        }
+
+        setWorkout({ ...workoutData, days: [day] });
+        setExercise(exercise);
+        setFormValues({
+          name: exercise.name || "",
+          sets: exercise.sets || "",
+          reps: exercise.reps || "",
+          cadence: exercise.cadence || "",
+          notes: exercise.notes || "",
+          video: exercise.video || "",
         });
-        router.push(`/coach/dashboard/workouts/${workoutId}`);
-      })
-      .catch((error) => console.error(error));
-  };
+      } catch (error) {
+        console.error("Error fetching exercise data:", error);
+        toast.error("Failed to load exercise data");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchExerciseData();
+  }, [workoutId, dayId, exerciseId, token, router]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
+    setFormValues((prevValues) => ({ ...prevValues, [name]: value }));
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Validation
+    if (!formValues.name.trim()) {
+      toast.error("Exercise name is required");
+      return;
+    }
+
+    if (!formValues.sets.trim()) {
+      toast.error("Sets are required");
+      return;
+    }
+
+    if (!formValues.reps.trim()) {
+      toast.error("Reps are required");
+      return;
+    }
+
+    try {
+      setIsSaving(true);
+
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/workouts/update/${workoutId}/${dayId}/${exerciseId}`,
+        formValues,
+        { headers: { Authorization: token } }
+      );
+
+      toast.success("Exercise updated successfully");
+      router.push(`/coach/dashboard/workouts/${workoutId}`);
+    } catch (error) {
+      console.error("Error updating exercise:", error);
+      toast.error("Failed to update exercise");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <Layout>
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        </div>
+      </Layout>
+    );
+  }
+
   if (!workout || !exercise) {
-    return <div>Loading...</div>;
+    return (
+      <Layout>
+        <div className="text-center py-12">
+          <p className="text-base-content/70">Exercise not found</p>
+          <Button
+            variant="primary"
+            className="mt-4"
+            onClick={() =>
+              router.push(`/coach/dashboard/workouts/${workoutId}`)
+            }
+          >
+            Back to Workout
+          </Button>
+        </div>
+      </Layout>
+    );
   }
 
   return (
     <Layout>
-      <h1 className={"font-thin font-lato text-4xl m-4"}>Edit Exercise</h1>
-      <form onSubmit={handleSubmit} className="px-4">
-        <div>
-          <label htmlFor="name" className="font-lato font-bold">
-            Exercise
-          </label>
-          <textarea
-            type="text"
-            name="name"
-            className={"input input-ghost w-full max-w-xs m-4"}
-            value={formValues.name}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="sets" className="font-lato font-bold">
-            Sets
-          </label>
-          <input
-            type="text"
-            name="sets"
-            className={"input input-ghost w-full max-w-xs m-4"}
-            value={formValues.sets}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="reps" className="font-lato font-bold">
-            Reps
-          </label>
-          <input
-            type="text"
-            name="reps"
-            className={"input input-ghost w-full max-w-xs m-4"}
-            value={formValues.reps}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="cadence" className="font-lato font-bold">
-            Cadence
-          </label>
-          <input
-            type="text"
-            name="cadence"
-            className={"input input-ghost w-full max-w-xs m-4"}
-            value={formValues.cadence}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="notes" className="font-lato font-bold">
-            Notes
-          </label>
-          <input
-            type="text"
-            name="notes"
-            className={"input input-ghost w-full max-w-xs m-4"}
-            value={formValues.notes}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="video" className="font-lato font-bold">
-            Video
-          </label>
-          <input
-            type="text"
-            name="video"
-            className={"input input-ghost w-full max-w-xs m-4"}
-            value={formValues.video}
-            onChange={handleChange}
-          />
-        </div>
-        <button type="submit" className="btn btn-success">
-          Update Exercise
-        </button>
-      </form>
+      <div className="max-w-4xl mx-auto px-4">
+        <PageHeader
+          title="Edit Exercise"
+          subtitle={`Day: ${workout.days[0].day} - ${workout.days[0].focus}`}
+        />
+
+        <Card className="p-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="form-control w-full">
+              <Input
+                id="name"
+                name="name"
+                type="text"
+                label="Exercise Name"
+                placeholder="Exercise Name"
+                required={true}
+                value={formValues.name}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Input
+                id="sets"
+                name="sets"
+                type="text"
+                label="Sets"
+                placeholder="Sets"
+                required={true}
+                value={formValues.sets}
+                onChange={handleChange}
+              />
+
+              <Input
+                id="reps"
+                name="reps"
+                type="text"
+                label="Reps"
+                placeholder="Reps"
+                required={true}
+                value={formValues.reps}
+                onChange={handleChange}
+              />
+
+              <Input
+                id="cadence"
+                name="cadence"
+                type="text"
+                label="Cadence"
+                placeholder="Cadence (e.g. 2-0-2)"
+                value={formValues.cadence}
+                onChange={handleChange}
+              />
+            </div>
+
+            <TextArea
+              id="notes"
+              name="notes"
+              label="Notes"
+              placeholder="Exercise Notes"
+              value={formValues.notes}
+              onChange={handleChange}
+              rows={3}
+            />
+
+            <Input
+              id="video"
+              name="video"
+              type="url"
+              label="Video Link"
+              placeholder="Video URL"
+              value={formValues.video}
+              onChange={handleChange}
+            />
+
+            <div className="flex justify-between pt-4">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() =>
+                  router.push(`/coach/dashboard/workouts/${workoutId}`)
+                }
+              >
+                Cancel
+              </Button>
+
+              <Button type="submit" variant="success" disabled={isSaving}>
+                {isSaving ? "Saving..." : "Update Exercise"}
+              </Button>
+            </div>
+          </form>
+        </Card>
+      </div>
     </Layout>
   );
 }
-
-export default ExerciseEditPage;
