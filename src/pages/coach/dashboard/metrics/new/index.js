@@ -149,9 +149,9 @@ export default function AddMetricsPage() {
           <div className="p-4">
             <input
               type="number"
-              name="tights"
-              placeholder="Tights (cm)"
-              value={formData.tights}
+              name="thighs"
+              placeholder="Thighs (cm)"
+              value={formData.thighs}
               onChange={handleChange}
               className="input w-full max-w-xs"
             />

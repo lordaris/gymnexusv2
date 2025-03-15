@@ -13,6 +13,7 @@ function AddExercise() {
     reps: "",
     cadence: "",
     notes: "",
+    video: "",
   });
   const router = useRouter();
   const token = Cookie.get("token");
@@ -21,9 +22,12 @@ function AddExercise() {
   useEffect(() => {
     if (workoutId) {
       axios
-        .get(process.env.NEXT_PUBLIC_API_URL + `/workouts/list/by-id/${workoutId}`, {
-          headers: { Authorization: `${token}` },
-        })
+        .get(
+          process.env.NEXT_PUBLIC_API_URL + `/workouts/list/by-id/${workoutId}`,
+          {
+            headers: { Authorization: `${token}` },
+          }
+        )
         .then((response) => {
           const day = response.data.days.find((d) => d._id === dayId);
           const exercise = day.exercises.find((e) => e._id === exerciseId);
@@ -43,7 +47,7 @@ function AddExercise() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const updatedExercise = { ...formValues };
+    const updatedExercise = { ...formValues }; // This will now include the video field
     axios
       .post(
         process.env.NEXT_PUBLIC_API_URL +
@@ -52,15 +56,10 @@ function AddExercise() {
         { headers: { Authorization: `${token}` } }
       )
       .then(() => {
-        alert("Exercise added!");
+        toast.success("Exercise added successfully!");
         router.push(`/coach/dashboard/workouts/${workoutId}`);
       })
       .catch((error) => console.error(error));
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
   };
 
   return (

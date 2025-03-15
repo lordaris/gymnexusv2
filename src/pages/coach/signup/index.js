@@ -15,6 +15,40 @@ export default function SignupPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [PasswordChecklist, setPasswordChecklist] = useState(null);
+  const [passwordChecklistError, setPasswordChecklistError] = useState(false);
+
+  const validatePasswordManually = (password) => {
+    const hasMinLength = password.length >= 8;
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const hasNumber = /\d/.test(password);
+    const hasCapital = /[A-Z]/.test(password);
+
+    return hasMinLength && hasSpecialChar && hasNumber && hasCapital;
+  };
+
+  const handlePasswordChange = (event) => {
+    const newPassword = event.target.value;
+    setPassword(newPassword);
+
+    // If the component failed to load, use manual validation
+    if (passwordChecklistError) {
+      setIsPasswordValid(validatePasswordManually(newPassword));
+    }
+  };
+
+  useEffect(() => {
+    // Dynamically import the PasswordChecklist component on the client-side
+    import("react-password-checklist")
+      .then((module) => {
+        setPasswordChecklist(() => module.default);
+      })
+      .catch((error) => {
+        console.error("Failed to load PasswordChecklist:", error);
+        setPasswordChecklistError(true);
+        // Set initial password validity using manual check
+        setIsPasswordValid(validatePasswordManually(password));
+      });
+  }, []);
 
   LoginRedirect();
 
@@ -114,10 +148,46 @@ export default function SignupPage() {
                 label="Password"
                 placeholder="Password"
                 value={password}
-                onChange={(event) => setPassword(event.target.value)}
+                onChange={handlePasswordChange}
               />
 
-              {PasswordChecklist && (
+              {passwordChecklistError ? (
+                <div className="mt-2 bg-base-200 p-3 rounded">
+                  <p className="text-sm mb-1">Password requirements:</p>
+                  <ul className="list-disc pl-5 text-sm">
+                    <li
+                      className={
+                        password.length >= 8 ? "text-success" : "text-error"
+                      }
+                    >
+                      At least 8 characters
+                    </li>
+                    <li
+                      className={
+                        /[!@#$%^&*(),.?":{}|<>]/.test(password)
+                          ? "text-success"
+                          : "text-error"
+                      }
+                    >
+                      At least one special character
+                    </li>
+                    <li
+                      className={
+                        /\d/.test(password) ? "text-success" : "text-error"
+                      }
+                    >
+                      At least one number
+                    </li>
+                    <li
+                      className={
+                        /[A-Z]/.test(password) ? "text-success" : "text-error"
+                      }
+                    >
+                      At least one capital letter
+                    </li>
+                  </ul>
+                </div>
+              ) : PasswordChecklist ? (
                 <div className="mt-2 bg-base-200 p-3 rounded">
                   <PasswordChecklist
                     rules={["minLength", "specialChar", "number", "capital"]}
@@ -125,6 +195,10 @@ export default function SignupPage() {
                     value={password}
                     onChange={handlePasswordValidityChange}
                   />
+                </div>
+              ) : (
+                <div className="mt-2 bg-base-200 p-3 rounded">
+                  <p>Checking password requirements...</p>
                 </div>
               )}
             </div>

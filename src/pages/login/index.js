@@ -1,65 +1,59 @@
-import { useState } from "react";
-import axios from "axios";
-import Cookies from "js-cookie";
 import { useRouter } from "next/router";
-import LoginRedirect from "../../components/ui/loginRedirect";
 import Head from "next/head";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import Link from "next/link";
-import { toast } from "react-toastify";
+import { useForm } from "../../hooks/useForm";
+import { validateLoginForm } from "../../utils/validation";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-
-  LoginRedirect();
+  const { login, loading: authLoading } = useAuth();
+  const {
+    values,
+    errors,
+    touched,
+    handleChange,
+    handleBlur,
+    validate,
+    setErrors,
+  } = useForm({
+    email: "",
+    password: "",
+  });
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setIsLoading(true);
-    setErrorMessage("");
 
-    try {
-      console.log("Attempting login with:", { email });
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/login`,
-        { email, password }
-      );
-
-      console.log("Login response:", response.status);
-
-      const { token, role, id } = response.data;
-
-      // Set cookies
-      Cookies.set("token", token);
-      Cookies.set("role", role);
-      Cookies.set("user", id);
-
-      toast.success("Login successful!");
-
-      // Redirect based on role
-      if (role === "ATHLETE") {
-        router.push("/user/dashboard");
-      } else {
-        router.push("/coach/dashboard");
+    // Validate form
+    const isValid = validate(validateLoginForm);
+    if (!isValid) {
+      // Focus on the first field with an error
+      const firstErrorField = Object.keys(errors)[0];
+      if (firstErrorField && document.getElementById(firstErrorField)) {
+        document.getElementById(firstErrorField).focus();
       }
-    } catch (error) {
-      console.error("Login error:", error);
+      return;
+    }
 
-      // Display detailed error information
-      const status = error.response?.status;
-      const errorMsg =
-        error.response?.data?.message ||
-        "Login failed. Please check your credentials.";
+    const result = await login({
+      email: values.email,
+      password: values.password,
+    });
 
-      setErrorMessage(`Error (${status || "unknown"}): ${errorMsg}`);
-      toast.error(errorMsg);
-    } finally {
-      setIsLoading(false);
+    if (result.success) {
+      // Navigate using window.location instead of router.push to avoid SecurityError
+      if (result.role === "ATHLETE") {
+        window.location.href = "/user/dashboard";
+      } else {
+        window.location.href = "/coach/dashboard";
+      }
+    } else {
+      // Show error in form
+      setErrors({
+        form: result.error || "Invalid email or password",
+      });
     }
   };
 
@@ -75,14 +69,14 @@ export default function LoginPage() {
             <p className="text-base-content/70">Welcome back to gymNEXUS</p>
           </div>
 
-          {errorMessage && (
-            <div className="alert alert-error shadow-lg mb-6">
-              <span>{errorMessage}</span>
-            </div>
-          )}
-
           <form className="space-y-6" onSubmit={handleSubmit}>
             <input type="hidden" name="remember" value="true" />
+
+            {errors.form && (
+              <div className="alert alert-error">
+                <span>{errors.form}</span>
+              </div>
+            )}
 
             <Input
               id="email-address"
@@ -91,8 +85,12 @@ export default function LoginPage() {
               autoComplete="email"
               required={true}
               placeholder="Email address"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              value={values.email}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={errors.email}
+              touched={touched.email}
+              label="Email Address"
             />
 
             <Input
@@ -102,8 +100,12 @@ export default function LoginPage() {
               autoComplete="current-password"
               required={true}
               placeholder="Password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
+              value={values.password}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={errors.password}
+              touched={touched.password}
+              label="Password"
             />
 
             <div>
@@ -111,10 +113,10 @@ export default function LoginPage() {
                 type="submit"
                 variant="primary"
                 size="lg"
-                disabled={isLoading}
+                disabled={authLoading}
                 fullWidth
               >
-                {isLoading ? "Logging in..." : "Login"}
+                {authLoading ? "Logging in..." : "Login"}
               </Button>
             </div>
 

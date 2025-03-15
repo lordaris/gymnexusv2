@@ -11,7 +11,7 @@ export default async function validateToken(req, res) {
 
     // Verify and decode the token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.userId;
+    const userId = decoded._id;
 
     // Retrieve the user from the database based on the decoded userId
     const user = await User.findById(userId);

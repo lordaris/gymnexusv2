@@ -14,7 +14,7 @@ export default function AddMetricsPage() {
     chest: "",
     waist: "",
     hips: "",
-    tights: "",
+    thighs: "",
     biceps: "",
     benchPressRm: "",
     sitUpRm: "",
@@ -51,7 +51,7 @@ export default function AddMetricsPage() {
         chest: "",
         waist: "",
         hips: "",
-        tights: "",
+        thighs: "",
         biceps: "",
         benchPressRm: "",
         sitUpRm: "",
@@ -66,19 +66,23 @@ export default function AddMetricsPage() {
 
   return (
     <Layout>
-       <h1 className="text-4xl m-4 font-thin font-lato">Add New Metrics</h1>
+      <h1 className="text-4xl m-4 font-thin font-lato">Add New Metrics</h1>
       <div className="flex justify-center mt-4">
-
-      <p className="text-xl max-w-md">
-      <p className="text-xl">Feel free to add any metric you like.</p>
-
-        If you add <span className="text-primary">weight, height, neck, waist, and hips,</span> the app will
-        calculate your <span className="text-primary-focus">BMI and body fat percentage </span>and add that information to
-        the corresponding line chart. You need to
+        <p className="text-xl max-w-md">
+          <p className="text-xl">Feel free to add any metric you like.</p>
+          If you add{" "}
+          <span className="text-primary">
+            weight, height, neck, waist, and hips,
+          </span>{" "}
+          the app will calculate your{" "}
+          <span className="text-primary-focus">
+            BMI and body fat percentage{" "}
+          </span>
+          and add that information to the corresponding line chart. You need to
           update your biological sex on your profile to make the body fat
           percentage calculations work
-      </p>
-</div>
+        </p>
+      </div>
       <div className="mt-8">
         <form onSubmit={handleSubmit}>
           <div className="p-4">
@@ -146,9 +150,9 @@ export default function AddMetricsPage() {
           <div className="p-4">
             <input
               type="number"
-              name="tights"
-              placeholder="Tights (cm)"
-              value={formData.tights}
+              name="thighs"
+              placeholder="Thighs (cm)"
+              value={formData.thighs}
               onChange={handleChange}
               className="input w-full max-w-xs"
             />
