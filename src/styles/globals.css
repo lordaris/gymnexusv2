@@ -138,6 +138,22 @@ a:not(.btn):not(.no-style) {
     @apply w-full;
   }
 
+  /* Fixed the table-sm issue - replaced with custom styles */
+  .table-compact {
+    @apply text-sm p-2;
+  }
+
+  .table-compact th,
+  .table-compact td {
+    @apply p-2 text-sm;
+  }
+
+  /* Table with fixed layout */
+  .table-fixed-layout {
+    table-layout: fixed;
+    width: 100%;
+  }
+
   /* Custom drawer for mobile/desktop layouts */
   .custom-drawer {
     position: relative;
@@ -231,6 +247,90 @@ a:not(.btn):not(.no-style) {
   .bottom-nav-label {
     @apply text-xs;
   }
+
+  /* Content cards with consistent spacing */
+  .content-card {
+    @apply bg-base-200 p-6 rounded-lg shadow-md mb-6;
+  }
+
+  .content-card-header {
+    @apply mb-4 pb-3 border-b border-base-300;
+  }
+
+  .content-card-footer {
+    @apply mt-6 pt-4 border-t border-base-300;
+  }
+
+  /* Form layout helpers */
+  .form-section {
+    @apply mb-8;
+  }
+
+  .form-group {
+    @apply mb-4;
+  }
+
+  .form-row {
+    @apply flex flex-col sm:flex-row gap-4 mb-4;
+  }
+
+  .form-row-equal {
+    @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4;
+  }
+
+  .form-actions {
+    @apply flex flex-col sm:flex-row justify-end gap-2 mt-6;
+  }
+
+  /* Form alignment */
+  .form-aligned .form-control {
+    @apply mx-auto;
+  }
+
+  .form-centered {
+    @apply flex flex-col items-center;
+  }
+
+  .form-centered .form-control {
+    @apply w-full max-w-md;
+  }
+
+  /* Data display consistency */
+  .data-label {
+    @apply text-sm font-medium text-base-content/70;
+  }
+
+  .data-value {
+    @apply text-base font-medium;
+  }
+
+  .data-row {
+    @apply flex flex-col sm:flex-row sm:items-center py-2 border-b border-base-300 last:border-b-0;
+  }
+
+  .data-row .data-label {
+    @apply sm:w-1/3 mb-1 sm:mb-0;
+  }
+
+  .data-row .data-value {
+    @apply sm:w-2/3;
+  }
+
+  /* Card grid layouts */
+  .card-grid {
+    @apply grid gap-6;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
+
+  .card-grid-sm {
+    @apply grid gap-4;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+
+  .card-grid-lg {
+    @apply grid gap-6;
+    grid-template-columns: repeat(auto-fill, minmax(384px, 1fr));
+  }
 }
 
 /* Additional utility classes */
@@ -246,6 +346,25 @@ a:not(.btn):not(.no-style) {
 
 .flex-between {
   @apply flex items-center justify-between;
+}
+
+.flex-end {
+  @apply flex items-center justify-end;
+}
+
+.flex-col-center {
+  @apply flex flex-col items-center;
+}
+
+/* Grid layouts */
+.grid-auto-fit {
+  @apply grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.grid-auto-fill {
+  @apply grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 }
 
 /* Dark mode improvements */
@@ -274,5 +393,135 @@ a:not(.btn):not(.no-style) {
   to {
     transform: translateY(0);
     opacity: 1;
+  }
+}
+
+.slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Consistent spacing */
+.page-padding {
+  @apply px-4 sm:px-6 lg:px-8 py-6;
+}
+
+.container-center {
+  @apply mx-auto;
+  max-width: 1280px;
+}
+
+/* Max widths for different content types */
+.content-xs {
+  @apply mx-auto;
+  max-width: 20rem; /* 320px */
+}
+
+.content-sm {
+  @apply mx-auto;
+  max-width: 30rem; /* 480px */
+}
+
+.content-md {
+  @apply mx-auto;
+  max-width: 42rem; /* 672px */
+}
+
+.content-lg {
+  @apply mx-auto;
+  max-width: 64rem; /* 1024px */
+}
+
+.content-xl {
+  @apply mx-auto;
+  max-width: 80rem; /* 1280px */
+}
+
+/* Table styles for consistency */
+.table-container {
+  @apply overflow-x-auto rounded-lg bg-base-200 shadow-sm mb-6;
+}
+
+/* Text utilities */
+.text-primary-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary;
+}
+
+/* Status indicators */
+.status-indicator {
+  @apply inline-block h-2.5 w-2.5 rounded-full;
+}
+
+.status-active {
+  @apply bg-success;
+}
+
+.status-pending {
+  @apply bg-warning;
+}
+
+.status-inactive {
+  @apply bg-error;
+}
+
+/* Buttons with consistent spacing */
+.btn-icon {
+  @apply inline-flex items-center justify-center;
+}
+
+.btn-icon-left svg {
+  @apply mr-2;
+}
+
+.btn-icon-right svg {
+  @apply ml-2;
+}
+
+/* Accessibility improvements */
+.focus-visible:focus-visible {
+  @apply outline-none ring-2 ring-primary ring-offset-2;
+}
+
+/* Responsive padding for mobile */
+@media (max-width: 640px) {
+  .page-padding {
+    @apply px-3 py-4;
+  }
+
+  .content-card {
+    @apply p-4;
+  }
+
+  .form-actions {
+    @apply flex-col;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  body {
+    font-size: 12pt;
+  }
+
+  .page-break {
+    page-break-before: always;
   }
 }

@@ -2,10 +2,22 @@ import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import LogoutButton from "./logoutButton";
 import Head from "next/head";
+import { PageTitle } from "./pageTitle";
+import {
+  FaHome,
+  FaDumbbell,
+  FaUsers,
+  FaUser,
+  FaSignOutAlt,
+  FaChartLine,
+  FaBars,
+  FaTimes,
+} from "react-icons/fa";
+import LogoutButton from "./logoutButton";
 
-const CoachLayout = ({ children }) => {
+const CoachLayout = ({ children, title = "Coach Dashboard" }) => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -18,163 +30,242 @@ const CoachLayout = ({ children }) => {
     }
   }, [router]);
 
+  // Close sidebar when route changes (for mobile)
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [router.pathname]);
+
   const navItems = [
     {
+      label: "Dashboard",
+      icon: <FaHome className="w-5 h-5" />,
+      href: "/coach/dashboard",
+    },
+    {
       label: "Workouts",
+      icon: <FaDumbbell className="w-5 h-5" />,
       dropdown: true,
       items: [
-        { label: "List", href: "/coach/dashboard/workouts" },
-        { label: "Create", href: "/coach/dashboard/workouts/new/workout" },
+        { label: "All Workouts", href: "/coach/dashboard/workouts" },
+        {
+          label: "Create Workout",
+          href: "/coach/dashboard/workouts/new/workout",
+        },
       ],
     },
     {
       label: "Clients",
+      icon: <FaUsers className="w-5 h-5" />,
       dropdown: true,
       items: [
-        { label: "List", href: "/coach/dashboard/users" },
-        { label: "Create", href: "/coach/dashboard/users/createuser" },
+        { label: "All Clients", href: "/coach/dashboard/users" },
+        { label: "Add Client", href: "/coach/dashboard/users/createuser" },
       ],
     },
     {
+      label: "Metrics",
+      icon: <FaChartLine className="w-5 h-5" />,
+      href: "/coach/dashboard/metrics/new",
+    },
+    {
       label: "Profile",
+      icon: <FaUser className="w-5 h-5" />,
       href: "/coach/dashboard/profile",
     },
   ];
 
+  // Check if path is active
+  const isActive = (path) => {
+    if (path === "/coach/dashboard") {
+      return router.pathname === path;
+    }
+    return router.pathname.startsWith(path);
+  };
+
+  // Logo component
+  const Logo = () => (
+    <Link href="/coach/dashboard" className="flex items-center px-4 py-2">
+      <h1 className="text-2xl md:text-3xl">
+        <span className="font-thin font-lato">gym</span>
+        <span className="font-bebas text-primary">NEXUS</span>
+      </h1>
+    </Link>
+  );
+
   return (
     <>
+      {/* Use PageTitle component instead of Head for title */}
+      <PageTitle title={title} />
+
       <Head>
-        <title>gymNEXUS - Coach Dashboard</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
-      <div className="drawer">
-        <input id="drawer-toggle" type="checkbox" className="drawer-toggle" />
 
-        <div className="drawer-content flex flex-col min-h-screen">
-          {/* Navbar */}
-          <header className="w-full navbar bg-base-300 shadow-md z-10">
-            <div className="flex-none lg:hidden">
-              <label
-                htmlFor="drawer-toggle"
-                className="btn btn-square btn-ghost"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  className="inline-block w-6 h-6 stroke-current"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              </label>
+      <div className="min-h-screen flex bg-base-100">
+        {/* Sidebar for desktop */}
+        <aside className="hidden lg:flex lg:flex-col w-64 bg-base-200 border-r border-base-300">
+          <div className="flex flex-col h-full">
+            <div className="py-6 px-4 border-b border-base-300">
+              <Logo />
             </div>
 
-            <div className="flex-1">
-              <Link
-                href="/coach/dashboard"
-                className="text-xl md:text-3xl lg:text-4xl px-4 md:px-6"
-              >
-                <span className="font-thin font-lato">gym</span>
-                <span className="font-bebas text-primary">NEXUS</span>
-              </Link>
-            </div>
-
-            <div className="flex-none hidden lg:block">
-              <ul className="menu menu-horizontal px-2 gap-1">
-                {navItems.map((item, index) =>
-                  item.dropdown ? (
-                    <li
-                      key={index}
-                      className="dropdown dropdown-end"
-                      tabIndex={0}
-                    >
-                      <button className="btn btn-ghost m-1">
-                        {item.label}
-                        <svg
-                          className="fill-current h-4 w-4 ml-1"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </button>
-                      <ul className="dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box w-52">
-                        {item.items.map((subItem, subIndex) => (
-                          <li key={subIndex}>
-                            <Link
-                              href={subItem.href}
-                              className="btn btn-ghost btn-sm justify-start"
-                            >
-                              {subItem.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </li>
-                  ) : (
-                    <li key={index}>
-                      <Link href={item.href} className="btn btn-ghost m-1">
-                        {item.label}
+            <nav className="flex-1 pt-4 pb-4 overflow-y-auto">
+              <ul className="space-y-1 px-2">
+                {navItems.map((item, index) => (
+                  <li key={index}>
+                    {item.dropdown ? (
+                      <div className="mb-2">
+                        <div className="flex items-center px-3 py-2 text-base-content/70 font-medium">
+                          {item.icon}
+                          <span className="ml-3">{item.label}</span>
+                        </div>
+                        <ul className="mt-1 pl-10 space-y-1">
+                          {item.items.map((subItem, subIndex) => (
+                            <li key={subIndex}>
+                              <Link
+                                href={subItem.href}
+                                className={`flex items-center px-3 py-2 text-sm rounded-md ${
+                                  isActive(subItem.href)
+                                    ? "bg-primary text-primary-content"
+                                    : "hover:bg-base-300"
+                                }`}
+                              >
+                                {subItem.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ) : (
+                      <Link
+                        href={item.href}
+                        className={`flex items-center px-3 py-2 rounded-md ${
+                          isActive(item.href)
+                            ? "bg-primary text-primary-content"
+                            : "hover:bg-base-300"
+                        }`}
+                      >
+                        {item.icon}
+                        <span className="ml-3">{item.label}</span>
                       </Link>
-                    </li>
-                  )
-                )}
-                <li>
-                  <LogoutButton />
-                </li>
+                    )}
+                  </li>
+                ))}
               </ul>
+            </nav>
+
+            <div className="p-4 border-t border-base-300">
+              <LogoutButton
+                variant="error"
+                size="md"
+                fullWidth
+                icon={<FaSignOutAlt />}
+              />
+            </div>
+          </div>
+        </aside>
+
+        {/* Main content area */}
+        <div className="flex-1 flex flex-col">
+          {/* Mobile header */}
+          <header className="lg:hidden bg-base-200 border-b border-base-300 px-4 py-2">
+            <div className="flex justify-between items-center">
+              <Logo />
+              <button
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              >
+                {sidebarOpen ? (
+                  <FaTimes className="h-6 w-6" />
+                ) : (
+                  <FaBars className="h-6 w-6" />
+                )}
+              </button>
             </div>
           </header>
 
-          {/* Main content */}
-          <main className="flex-grow">{children}</main>
-        </div>
+          {/* Mobile sidebar (overlay) */}
+          {sidebarOpen && (
+            <div className="lg:hidden fixed inset-0 z-40 flex">
+              {/* Backdrop */}
+              <div
+                className="fixed inset-0 bg-black bg-opacity-50"
+                onClick={() => setSidebarOpen(false)}
+              ></div>
 
-        {/* Drawer/sidebar for mobile */}
-        <div className="drawer-side">
-          <label htmlFor="drawer-toggle" className="drawer-overlay"></label>
-          <ul className="menu p-4 w-80 h-full bg-base-200 text-base-content">
-            <li className="mb-6">
-              <Link href="/coach/dashboard" className="text-2xl">
-                <span className="font-thin font-lato">gym</span>
-                <span className="font-bebas text-primary">NEXUS</span>
-              </Link>
-            </li>
+              {/* Sidebar */}
+              <div className="relative flex-1 flex flex-col max-w-xs w-full bg-base-200">
+                <div className="flex justify-between items-center px-4 py-2 border-b border-base-300">
+                  <Logo />
+                  <button
+                    onClick={() => setSidebarOpen(false)}
+                    className="p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                  >
+                    <FaTimes className="h-6 w-6" />
+                  </button>
+                </div>
 
-            {navItems.map((item, index) =>
-              item.dropdown ? (
-                <li key={index} className="mb-2">
-                  <span className="font-semibold">{item.label}</span>
-                  <ul className="pl-4">
-                    {item.items.map((subItem, subIndex) => (
-                      <li key={subIndex}>
-                        <Link href={subItem.href} className="py-2">
-                          {subItem.label}
-                        </Link>
+                <nav className="flex-1 pt-4 pb-4 overflow-y-auto">
+                  <ul className="space-y-1 px-2">
+                    {navItems.map((item, index) => (
+                      <li key={index}>
+                        {item.dropdown ? (
+                          <div className="mb-2">
+                            <div className="flex items-center px-3 py-2 text-base-content/70 font-medium">
+                              {item.icon}
+                              <span className="ml-3">{item.label}</span>
+                            </div>
+                            <ul className="mt-1 pl-10 space-y-1">
+                              {item.items.map((subItem, subIndex) => (
+                                <li key={subIndex}>
+                                  <Link
+                                    href={subItem.href}
+                                    className={`flex items-center px-3 py-2 text-sm rounded-md ${
+                                      isActive(subItem.href)
+                                        ? "bg-primary text-primary-content"
+                                        : "hover:bg-base-300"
+                                    }`}
+                                  >
+                                    {subItem.label}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ) : (
+                          <Link
+                            href={item.href}
+                            className={`flex items-center px-3 py-2 rounded-md ${
+                              isActive(item.href)
+                                ? "bg-primary text-primary-content"
+                                : "hover:bg-base-300"
+                            }`}
+                          >
+                            {item.icon}
+                            <span className="ml-3">{item.label}</span>
+                          </Link>
+                        )}
                       </li>
                     ))}
                   </ul>
-                </li>
-              ) : (
-                <li key={index} className="mb-2">
-                  <Link href={item.href} className="py-2">
-                    {item.label}
-                  </Link>
-                </li>
-              )
-            )}
-            <li className="mt-6">
-              <LogoutButton variant="error" size="md" />
-            </li>
-          </ul>
+                </nav>
+
+                <div className="p-4 border-t border-base-300">
+                  <LogoutButton
+                    variant="error"
+                    size="md"
+                    fullWidth
+                    icon={<FaSignOutAlt />}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Page content */}
+          <main className="flex-1 overflow-y-auto bg-base-100">
+            <div className="container mx-auto px-4 py-6">{children}</div>
+          </main>
         </div>
       </div>
     </>
