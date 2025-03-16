@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import validator from "validator";
 
 const { Schema } = mongoose;
-
+const SALT_ROUNDS = 12;
 const metricsSchema = new Schema({
   date: Date,
   weight: Number,
@@ -56,6 +56,16 @@ const userSchema = new Schema({
   addedBy: {
     type: Schema.Types.ObjectId,
   },
+  passwordHistory: [
+    {
+      hash: String,
+      createdAt: Date,
+    },
+  ],
+  passwordLastChanged: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 // Static createuser method
@@ -81,10 +91,25 @@ userSchema.statics.signup = async function (email, password, role, addedBy) {
     throw new Error("User already exists");
   }
 
-  const salt = await bcrypt.genSalt(10);
+  const passwordHistory = [];
+
+  const salt = await bcrypt.genSalt(SALT_ROUNDS);
   const hash = await bcrypt.hash(password, salt);
 
-  const user = await this.create({ email, password: hash, role, addedBy });
+  // Store password hash in history
+  passwordHistory.push({
+    hash: hash,
+    createdAt: new Date(),
+  });
+
+  // Create user with password history
+  const user = await this.create({
+    email,
+    password: hash,
+    role,
+    addedBy,
+    passwordHistory,
+  });
 
   return user;
 };
@@ -113,4 +138,51 @@ userSchema.statics.login = async function (email, password) {
 const User = mongoose.models.User || mongoose.model("User", userSchema);
 
 export default User;
+
+// Add a method to change password securely
+userSchema.methods.changePassword = async function (
+  currentPassword,
+  newPassword
+) {
+  // Verify current password
+  const isMatch = await bcrypt.compare(currentPassword, this.password);
+  if (!isMatch) {
+    throw new Error("Current password is incorrect");
+  }
+
+  // Validate new password strength
+  if (!validator.isStrongPassword(newPassword)) {
+    throw new Error("New password is not strong enough");
+  }
+
+  // Check if new password matches recent passwords (last 3)
+  for (const historyItem of this.passwordHistory.slice(-3)) {
+    const isReused = await bcrypt.compare(newPassword, historyItem.hash);
+    if (isReused) {
+      throw new Error("New password cannot be the same as recent passwords");
+    }
+  }
+
+  // Hash the new password
+  const salt = await bcrypt.genSalt(SALT_ROUNDS);
+  const hash = await bcrypt.hash(newPassword, salt);
+
+  // Update password and add to history
+  this.password = hash;
+
+  // Add password to history
+  this.passwordHistory.push({
+    hash: hash,
+    createdAt: new Date(),
+  });
+
+  // Limit password history to last 5 entries
+  if (this.passwordHistory.length > 5) {
+    this.passwordHistory = this.passwordHistory.slice(-5);
+  }
+
+  await this.save();
+
+  return true;
+};
 

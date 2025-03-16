@@ -1,12 +1,13 @@
 import User from "../../../models/User";
 import jwt from "jsonwebtoken";
 import dbConnect from "../../../utils/mongodb";
+import { authLimiter } from "../../../utils/rateLimit";
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.JWT_SECRET, { expiresIn: "1d" });
 };
 
-export default async function signupUser(req, res) {
+export default authLimiter(async function signupUser(req, res) {
   // Check if method is POST
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Method not allowed" });
@@ -39,4 +40,4 @@ export default async function signupUser(req, res) {
     console.error("Signup error:", err.message);
     return res.status(400).json({ message: err.message });
   }
-}
+});
