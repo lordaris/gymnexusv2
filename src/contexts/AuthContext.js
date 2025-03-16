@@ -184,45 +184,4 @@ export function useAuth() {
   return context;
 }
 
-const refreshAccessToken = async () => {
-  try {
-    const refreshToken = Cookies.get("refreshToken");
-    if (!refreshToken) return false;
-
-    const response = await authAPI.refreshToken({ refreshToken });
-    const { token } = response.data;
-
-    // Update access token cookie
-    Cookies.set("token", token, { ...COOKIE_OPTIONS, expires: 1 });
-    return true;
-  } catch (error) {
-    console.error("Failed to refresh token:", error);
-    logout();
-    return false;
-  }
-};
-
-apiClient.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
-
-    // If error is 401 and we haven't tried refreshing token yet
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
-      // Try to refresh the token
-      const authContext = useAuth();
-      const refreshed = await authContext.refreshAccessToken();
-
-      if (refreshed) {
-        // Update Authorization header
-        originalRequest.headers.Authorization = Cookies.get("token");
-        // Retry the original request
-        return apiClient(originalRequest);
-      }
-    }
-
-    return Promise.reject(error);
-  }
-);
+export default AuthContext;

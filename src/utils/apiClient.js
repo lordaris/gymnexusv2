@@ -98,6 +98,8 @@ export const authAPI = {
   login: (credentials) => apiClient.post("/users/login", credentials),
   signup: (userData) => apiClient.post("/users/signup", userData),
   validateToken: () => apiClient.get("/users/validate-token"),
+  refreshToken: (refreshToken) =>
+    apiClient.post("/users/refresh-token", refreshToken),
 };
 
 // API endpoints - Users

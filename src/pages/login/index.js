@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import { Button } from "../../components/ui/button";
@@ -6,11 +7,13 @@ import Link from "next/link";
 import { useForm } from "../../hooks/useForm";
 import { validateLoginForm } from "../../utils/validation";
 import { useAuth } from "../../contexts/AuthContext";
+import axios from "axios";
 
 export default function LoginPage() {
   const router = useRouter();
   const { login, loading: authLoading } = useAuth();
   const [csrfToken, setCsrfToken] = useState("");
+
   const {
     values,
     errors,
@@ -25,39 +28,22 @@ export default function LoginPage() {
   });
 
   useEffect(() => {
-    fetch("/api/csrf-token")
-      .then((res) => res.json())
-      .then((data) => setCsrfToken(data.csrfToken));
+    // Fetch CSRF token when component mounts
+    const getCsrfToken = async () => {
+      try {
+        const response = await fetch("/api/csrf-token");
+        const data = await response.json();
+        setCsrfToken(data.csrfToken);
+      } catch (error) {
+        console.error("Failed to fetch CSRF token:", error);
+      }
+    };
+
+    getCsrfToken();
   }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    try {
-      // Add CSRF token to headers
-      const headers = { "X-CSRF-Token": csrfToken };
-      const response = await axios.post(
-        "/api/users/login",
-        { email: values.email, password: values.password },
-        { headers }
-      );
-
-      // Handle successful login
-      if (response.data.token) {
-        Cookies.set("token", response.data.token);
-        Cookies.set("role", response.data.role);
-        Cookies.set("user", response.data.id);
-
-        // Redirect based on role
-        router.push(
-          response.data.role === "COACH"
-            ? "/coach/dashboard"
-            : "/user/dashboard"
-        );
-      }
-    } catch (error) {
-      setErrors(error.response?.data?.message || "Login failed");
-    }
 
     // Validate form
     const isValid = validate(validateLoginForm);
@@ -70,22 +56,29 @@ export default function LoginPage() {
       return;
     }
 
-    const result = await login({
-      email: values.email,
-      password: values.password,
-    });
+    try {
+      const result = await login({
+        email: values.email,
+        password: values.password,
+      });
 
-    if (result.success) {
-      // Navigate using window.location instead of router.push to avoid SecurityError
-      if (result.role === "ATHLETE") {
-        window.location.href = "/user/dashboard";
+      if (result.success) {
+        // Navigate using window.location instead of router.push to avoid SecurityError
+        if (result.role === "ATHLETE") {
+          window.location.href = "/user/dashboard";
+        } else {
+          window.location.href = "/coach/dashboard";
+        }
       } else {
-        window.location.href = "/coach/dashboard";
+        // Show error in form
+        setErrors({
+          form: result.error || "Invalid email or password",
+        });
       }
-    } else {
-      // Show error in form
+    } catch (error) {
+      console.error("Login error:", error);
       setErrors({
-        form: result.error || "Invalid email or password",
+        form: "An unexpected error occurred. Please try again.",
       });
     }
   };
@@ -103,7 +96,9 @@ export default function LoginPage() {
           </div>
 
           <form className="space-y-6" onSubmit={handleSubmit}>
-            <input type="hidden" name="_csrf" value={csrfToken} />
+            {csrfToken && (
+              <input type="hidden" name="_csrf" value={csrfToken} />
+            )}
 
             {errors.form && (
               <div className="alert alert-error">

@@ -1,8 +1,8 @@
-// src/components/dashboard/DashboardStats.js
 import React, { useState, useEffect } from "react";
 import { Card } from "../ui/card";
 import { usersAPI, workoutsAPI } from "../../utils/apiClient";
 import Cookies from "js-cookie";
+import Link from "next/link";
 
 export const DashboardStats = ({ role }) => {
   const [stats, setStats] = useState({

@@ -10,7 +10,6 @@ import { toast } from "react-toastify";
 import { Card } from "../../../../components/ui/card";
 import { Button } from "../../../../components/ui/button";
 import { PageHeader } from "../../../../components/ui/pageHeader";
-import Layout from "../../../../components/ui/coachLayout";
 
 function WorkoutDetail() {
   const [workout, setWorkout] = useState(null);
